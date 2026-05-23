@@ -9,6 +9,7 @@
     <link rel="stylesheet" href="{% static 'css/base.css' %}">
     <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;600;700;800&family=Barlow:wght@300;400;500;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
+    {% block css %} {% endblock %}
 </head>
 
 <body>
@@ -17,6 +18,14 @@
     {% block content %} {% endblock %}
     {% block script %} {% endblock %}
 </div>
+<script>
+    // Add active class to the current link
+    document.querySelectorAll('.nav-links a').forEach(link => {
+        if (link.getAttribute('href') === window.location.pathname) {
+            link.classList.add('active');
+        }
+    });
+</script>
 
 <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
 </body>
