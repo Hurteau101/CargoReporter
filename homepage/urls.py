@@ -1,7 +1,7 @@
 from django.urls import path
-
-from homepage import views
+from homepage.views import HomeView, ClearDeleteView
 
 urlpatterns = [
-    path('', views.home, name='home'),
+    path('', HomeView.as_view(), name='home'),
+    path('delete', ClearDeleteView.as_view(), name='delete')
 ]

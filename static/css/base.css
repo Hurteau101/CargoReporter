@@ -22,6 +22,16 @@ body {
     color: var(--white);
     min-height: 100vh;
     overflow-x: hidden;
+    margin: 0;
+}
+
+.page {
+    position: relative;
+    z-index: 1;
+    padding: 1.8rem 2rem;
+    max-width: 1400px;
+    margin: 0 auto;
+    display: block;
 }
 
 /*Navbar*/
@@ -34,18 +44,20 @@ nav {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: 0 2rem;
+    padding-left: 2rem;
     height: 56px;
     box-shadow: 0 2px 20px rgba(0,0,0,0.4);
 }
 
 .nav-links {
+    padding: 0;
     display: flex;
     gap: 0;
     list-style: none;
 }
 
 .nav-links li a {
+    text-decoration: none;
     display: block;
     padding: 0 1.1rem;
     height: 56px;
@@ -56,11 +68,212 @@ nav {
     text-transform: uppercase;
     color: var(--muted);
     border-bottom: 2px solid transparent;
-    transition: color 0.2s, border-color;
+    transition: color 0.2s, border-color 0.2s;
     cursor: pointer;
 }
 
 .nav-links li a:hover, .nav-links li a.active {
     color: var(--accent);
     border-bottom-color: var(--accent);
+}
+
+/*Homepage*/
+.upload-card {
+    background: linear-gradient(135deg, #1a3558 0%, #162840 60%, #112233 100%);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 1.8rem 2rem;
+    box-shadow: 0 4px 24px rgba(0,0,0,0.3);
+    position: relative;
+    overflow: hidden;
+}
+
+.upload-card h2 {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 1.55rem;
+    font-weight: 800;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--ice);
+    margin-bottom: 1.2rem;
+    text-align: center;
+}
+
+.upload-card::after {
+    content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px;
+    background: linear-gradient(90deg, var(--accent), var(--steel));
+    border-radius: 14px 14px 0 0;
+  }
+
+.file-icon {
+    color: var(--sky);
+    flex-shrink: 0;
+}
+
+.upload-icon {
+    color: var(--accent);
+    flex-shrink: 0;
+    cursor: pointer;
+}
+
+.file-label {
+    flex: 1;
+    font-size: 0.9rem;
+    color: var(--muted);
+    cursor: pointer;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.file-label.chosen {
+    color: var(--ice);
+}
+
+.file-icon {
+    color: var(--sky);
+    flex-shrink: 0;
+}
+
+.file-input-wrapper {
+    display: flex; align-items: center; gap: 0.8rem;
+    background: rgba(0,194,224,0.05); border: 1.5px dashed var(--steel);
+    border-radius: 8px; padding: 0.75rem 1rem; margin-bottom: 1rem;
+    cursor: pointer; transition: border-color 0.2s, background 0.2s;
+}
+
+.file-input-wrapper:hover {
+    border-color: var(--accent);
+    background: rgba(0,194,224,0.09);
+}
+
+.file-input-wrapper input[type="file"] {
+    opacity: 0;
+    position: absolute;
+    pointer-events: none;
+}
+
+.btn-submit {
+    display: block; width: 100%; padding: 0.75rem;
+    background: linear-gradient(135deg, var(--steel), var(--navy-light));
+    border: 1px solid var(--accent-dim); border-radius: 8px; color: var(--ice);
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 1rem; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase;
+    cursor: pointer; transition: all 0.2s;
+}
+
+.btn-submit:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.btn-submit:hover {
+    background: linear-gradient(135deg, var(--accent-dim), var(--steel));
+    border-color: var(--accent);
+    color: var(--white);
+    box-shadow: 0 0 18px rgba(0,194,224,0.25);
+}
+
+.upload-alert {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 12px 16px;
+    border-radius: 8px;
+    font-size: 0.875rem;
+    margin-bottom: 1rem;
+    border: 1px solid rgba(239, 68, 68, 0.25);
+    background: rgba(239, 68, 68, 0.1);
+    color: #fca5a5;
+}
+
+/*Data Management*/
+.home-admin-section {
+    margin-top: 2rem;
+    background: var(--navy-mid);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    overflow: hidden;
+}
+.home-admin-header {
+    display: flex; align-items: center; gap: 0.6rem;
+    padding: 1rem 1.5rem;
+    background: rgba(0,0,0,0.2);
+    border-bottom: 1px solid var(--border);
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 0.85rem; font-weight: 700;
+    letter-spacing: 0.1em; text-transform: uppercase;
+    color: var(--ice);
+}
+.home-admin-header svg {
+    color: var(--accent);
+    flex-shrink: 0;
+}
+
+.home-admin-desc {
+    padding: 0.75rem 1.5rem 0;
+    font-size: 0.78rem; color: var(--muted); line-height: 1.5;
+}
+.home-admin-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;;
+    gap: 1px;
+    background: var(--border);
+    margin-top: 1rem;
+    border-top: 1px solid var(--border);
+}
+.home-admin-card {
+    display: flex; align-items: center; justify-content: space-between; gap: 1rem;
+    background: var(--navy-mid);
+    padding: 1.4rem 1.6rem;
+    transition: background 0.15s;
+}
+
+.home-admin-card:hover {
+    background: rgba(0,194,224,0.04);
+}
+.home-admin-card-body {
+    flex: 1;
+    min-width: 0;
+}
+.home-admin-card-title {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 1rem; font-weight: 800;
+    letter-spacing: 0.04em; text-transform: uppercase;
+    color: var(--ice); margin-bottom: 0.25rem;
+}
+.home-admin-card-desc {
+    font-size: 0.72rem;
+    color: var(--muted);
+    line-height: 1.4;
+}
+
+.home-btn-clear {
+    flex-shrink: 0;
+    padding: 0.4rem 0.9rem;
+    font-size: 0.78rem;
+}
+
+.btn-clear {
+    display: inline-flex; align-items: center; gap: 0.45rem;
+    padding: 0.55rem 1.2rem;
+    background: rgba(239,68,68,0.1);
+    border: 1px solid rgba(239,68,68,0.35);
+    border-radius: 7px; color: #f87171;
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 0.85rem; font-weight: 700;
+    letter-spacing: 0.08em; text-transform: uppercase;
+    cursor: pointer; transition: all 0.2s; white-space: nowrap;
+}
+.btn-clear:hover {
+    background: var(--danger);
+    color: white;
+    border-color: var(--danger);
+    box-shadow: 0 0 16px rgba(239,68,68,0.3);
+}
+.btn-clear.cleared {
+    background: rgba(34,197,94,0.1);
+    border-color: rgba(34,197,94,0.35);
+    color: #4ade80;
+    pointer-events: none;
 }
