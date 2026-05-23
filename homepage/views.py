@@ -111,6 +111,7 @@ class ClearDeleteView(View):
     def delete(self, request):
         model_mapper = {
             "duplicate_awbs": DuplicateAWB,
+            "sla": AWBData,
         }
 
         body = json.loads(request.body)
