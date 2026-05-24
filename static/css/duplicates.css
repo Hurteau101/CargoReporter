@@ -1,0 +1,23 @@
+.section-table-wrap--compact {
+    max-width: 460px;
+}
+
+.section-table-wrap--compact .section-table {
+    table-layout: fixed;
+    width: auto;
+}
+
+.section-table-wrap--compact .section-table th:nth-child(1),
+.section-table-wrap--compact .section-table td:nth-child(1) {
+    width: 200px;
+}
+
+.section-table-wrap--compact .section-table th:nth-child(2),
+.section-table-wrap--compact .section-table td:nth-child(2) {
+    width: 200px;
+}
+
+.section-table-wrap--compact .section-table th:nth-child(3),
+.section-table-wrap--compact .section-table td:nth-child(3) {
+    width: 60px;
+}
