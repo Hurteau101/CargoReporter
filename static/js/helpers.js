@@ -17,7 +17,9 @@ export function toastNotification(title, success=true, duration=2500, gravity="b
 export function updateStatValue(elementId, shouldIncrease=true) {
     const element = document.getElementById(elementId);
     if (element) {
-        element.textContent = `${Number(element.textContent) - shouldIncrease ? 1 : -1}`;
+
+        element.textContent = shouldIncrease ? Number(element.textContent) + 1 : Number(element.textContent) - 1;
+        // element.textContent = `${Number(element.textContent) - shouldIncrease ? 1 : -1}`;
     }
 }
 
