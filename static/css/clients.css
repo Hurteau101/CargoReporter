@@ -39,3 +39,7 @@
 .section-toolbar .search-input {
     max-width: 300px; flex: 1;
 }
+
+.dataTables_filter {
+    display: none;
+}
