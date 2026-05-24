@@ -41,7 +41,8 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'homepage',
-    "under_30"
+    "under_30",
+    "awb_status"
 ]
 
 MIDDLEWARE = [

@@ -23,6 +23,7 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include('homepage.urls')),
     path('', include('under_30.urls')),
+    path('', include('awb_status.urls')),
 ]
 
 if settings.DEBUG:
