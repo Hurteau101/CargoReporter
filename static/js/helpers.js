@@ -13,3 +13,19 @@ export function toastNotification(title, success=true, duration=2500, gravity="b
         style: style
     }).showToast();
 }
+
+export function updateStatValue(elementId, shouldIncrease=true) {
+    const element = document.getElementById(elementId);
+    if (element) {
+        element.textContent = `${Number(element.textContent) - shouldIncrease ? 1 : -1}`;
+    }
+}
+
+export function createDataTable(tableId, options) {
+    new DataTable('.section-table', {
+        paging: false,
+        info: false,
+        searching: false,
+        ...options
+    });
+}

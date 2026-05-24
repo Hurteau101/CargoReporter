@@ -1,21 +1,13 @@
-import {toastNotification} from "./helpers.js";
+import {toastNotification, updateStatValue} from "./helpers.js";
 
 
 
 
 function updateStats(hours) {
-    function updateValue(elementId) {
-        const element = document.getElementById(elementId);
-        if (element) {
-            element.textContent = `${Number(element.textContent) - 1}`;
-        }
-    }
-
-    updateValue('total-stat')
+    updateStatValue('total-stat', false)
 
     const statId = hours < 6 ? 'critical-stat' : hours <= 15 ? 'warning-stat' : 'ok-stat';
-    updateValue(statId)
-
+    updateStatValue(statId, false)
 }
 
 

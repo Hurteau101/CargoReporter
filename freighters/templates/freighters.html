@@ -1,4 +1,163 @@
 {% extends 'base.html' %}
+{% load static %}
+{% block css %}
+    <link rel="stylesheet" href="{% static 'css/freighters.css' %}">
+{% endblock %}
 {% block content %}
-    <h1>Test</h1>
+    <div class="section-header">
+        <div class="section-title">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="color:var(--accent);vertical-align:middle;margin-right:6px"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.72 12 19.79 19.79 0 0 1 1.62 3.4 2 2 0 0 1 3.6 1.21h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L7.91 8.79a16 16 0 0 0 6.29 6.29l.95-.96a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+            Freighter <span>Registry</span>
+        </div>
+        <button class="btn-add" id="btn-add-freighter">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+            Add Freighter
+        </button>
+    </div>
+
+    <div class="section-stats">
+        <div class="section-stat"><span class="section-stat-label">Total Freighters</span><span class="section-stat-value" id="total-stat">{{ freighter_stats.total }}</span></div>
+        <div class="section-stat"><span class="section-stat-label">Active</span><span class="section-stat-value" id="active-stat" style="color:var(--success)">{{ freighter_stats.active }}</span></div>
+        <div class="section-stat"><span class="section-stat-label">In Maintenance</span><span class="section-stat-value" id="in-maintenance-stat" style="color:var(--warning)">{{ freighter_stats.in_maintenance }}</span></div>
+        <div class="section-stat"><span class="section-stat-label">Delayed</span><span class="section-stat-value" id="delayed-stat" style="color:var(--danger)">{{ freighter_stats.delayed }}</span></div>
+        <div class="section-stat"><span class="section-stat-label">Sta. Notified</span><span class="section-stat-value" id="station-notified-stat" style="color:var(--accent)">{{ freighter_stats.station_notified }}</span></div>
+    </div>
+
+    <div class="add-card" id="add-freighter-card">
+        <form id="add-freighter-form" method="post">
+            <div class="add-card-title">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+                <span id="form-title-text">Add New Freighter</span>
+            </div>
+            <div class="field-row">
+                <div class="field-group">
+                    <label for="aircraft-type">Aircraft Type</label>
+                    {{ form.aircraft_type }}
+                </div>
+                <div class="field-group">
+                    <label for="tail-number">Freighter Name / Tail #</label>
+                    {{ form.tail_number }}
+                </div>
+                <div class="field-group">
+                    <label for="flight-number">Flight #</label>
+                    {{ form.flight_number }}
+                </div>
+                <div class="field-group">
+                    <label for="departure">Departing From (IATA)</label>
+                    {{ form.departure }}
+                </div>
+                <div class="field-group">
+                    <label for="destination">Destination (IATA)</label>
+                    {{ form.destination }}
+                </div>
+                <div class="field-group">
+                    <label for="departure-time">Departure Time</label>
+                    {{ form.departure_time }}
+                </div>
+                <div class="field-group">
+                    <label for="arrival-time">Arrival Time</label>
+                    {{ form.arrival_time }}
+                </div>
+                <div class="field-group">
+                    <label for="status">Status</label>
+                    {{ form.status }}
+                </div>
+                <div class="field-group">
+                    <label for="station-name-informed">Station Informed (Name)</label>
+                    {{ form.station_informed_name }}
+                </div>
+                <div class="field-group" style="justify-content: flex-start; padding-top: 1.4rem;">
+                    <div class="checkbox-row">
+                        {{ form.station_notified }}
+                        <label for="station-notified">Station Notified</label>
+                    </div>
+                </div>
+            </div>
+            <div class="field-row">
+                <div class="field-group" style="grid-column: span 2;">
+                    <label for="notes">Notes</label>
+                    {{ form.notes }}
+                </div>
+            </div>
+
+            <div class="form-actions">
+                <button class="btn-save">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="vertical-align:middle;margin-right:4px"><polyline points="20 6 9 17 4 12"/></svg>
+                    Save Freighter
+                </button>
+                <button type="button" class="btn-cancel-form" id="btn-cancel-add">Cancel</button>
+            </div>
+        </form>
+    </div>
+    <div class="section-table-wrap">
+        <div class="section-table-scroll">
+            <table class="section-table">
+                <thead>
+                    <tr>
+                        <th>Aircraft Type</th>
+                        <th>Name / Tail #</th>
+                        <th>Flight #</th>
+                        <th>Departing From</th>
+                        <th>Destination</th>
+                        <th>Dep Time</th>
+                        <th>Arr Time</th>
+                        <th>Status</th>
+                        <th>Station Informed Name</th>
+                        <th>Sta. Notified</th>
+                        <th>Notes</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody id="freighter-tbody">
+                {% for freighter in freighters %}
+                    <tr>
+                        <td>{{ freighter.get_aircraft_type_display  }}</td>
+                        <td>{{ freighter.tail_number }}</td>
+                        <td>{{ freighter.flight_number }}</td>
+                        <td>{{ freighter.departure }}</td>
+                        <td>{{ freighter.destination }}</td>
+                        <td>{{ freighter.departure_time }}</td>
+                        <td>{{ freighter.arrival_time }}</td>
+                        {% if freighter.status == "ACTIVE" %}
+                            <td><span class="badge badge-green">{{ freighter.get_status_display }}</span></td>
+                        {% elif freighter.status == "DELAYED" %}
+                            <td><span class="badge badge-red">{{ freighter.get_status_display }}</span></td>
+                        {% elif freighter.status == "IN_MAINTENANCE" %}
+                            <td><span class="badge badge-amber">{{ freighter.get_status_display }}</span></td>
+                        {% elif freighter.status == "CANCELLED" %}
+                            <td><span class="badge badge-red">{{ freighter.get_status_display }}</span></td>
+                        {% elif freighter.status == "COMPLETED" %}
+                            <td><span class="badge badge-blue">{{ freighter.get_status_display }}</span></td>
+                        {% elif freighter.status == "ON_GROUND" %}
+                            <td><span class="badge badge-gray">{{ freighter.get_status_display }}</span></td>
+                        {% else %}
+                            <td>{{ freighter.get_status_display }}</td>
+                        {% endif %}
+                        <td>{{ freighter.station_informed_name }}</td>
+                        <td>{{ freighter.station_notified|yesno:"Yes,No" }}</td>
+                        <td style="max-width:160px;overflow:hidden;text-overflow:ellipsis;color:var(--muted)">{{ freighter.notes }}</td>
+                        <td>
+                            <div style="display:flex;gap:0.4rem">
+                                <button class="btn-icon" data-edit={{ freighter.id }} title="Edit">
+                                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4z"/></svg>
+                                </button>
+                                <button class="btn-icon del" data-del={{ freighter.id }} title="Remove">
+                                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/><path d="M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/></svg>
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+
+{% endblock %}
+{% block script %}
+    <script>
+        const CSRF_TOKEN = '{{ csrf_token }}'
+    </script>
+    <script type="module" src="{% static 'js/freighters.js' %}"></script>
 {% endblock %}

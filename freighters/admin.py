@@ -1,3 +1,5 @@
 from django.contrib import admin
 
-# Register your models here.
+from freighters.models import Freighters
+
+admin.site.register(Freighters)
