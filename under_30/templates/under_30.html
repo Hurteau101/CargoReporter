@@ -37,7 +37,7 @@
                 <tbody id="under-30-table-body">
                 {% for awb in awb_list %}
                     <tr data-row-id="{{ awb.awb_number }}" class="{% if awb.sent %} row-sent {% endif %}">
-                        <td><strong style="color:var(--ice)">{{ awb.awb_number }}</strong></td>
+                        <td><strong>{{ awb.awb_number }}</strong></td>
                         <td>{{ awb.destination_iata }}</td>
                         <td>{{ awb.consignee|title }}</td>
                         <td style="text-align:center">{{ awb.pieces_on_hand }}</td>
