@@ -1,6 +1,6 @@
-import {toastNotification, updateStatValue} from "./helpers.js";
+import {toastNotification, updateStatValue, createDataTable} from "./helpers.js";
 
-
+createDataTable('under-30-table', {})
 
 
 function updateStats(hours) {
