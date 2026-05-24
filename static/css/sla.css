@@ -104,3 +104,20 @@
     .sla-layout { grid-template-columns: 1fr; }
     .sla-sidebar { position: static; }
 }
+
+.table-scroll {
+    overflow-x: auto;
+    max-height: 420px;
+    overflow-y: auto;
+}
+.table-wrapper {
+    background: var(--navy-mid);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    overflow: hidden;
+}
+table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.82rem;
+}

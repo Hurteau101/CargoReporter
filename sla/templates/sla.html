@@ -10,7 +10,69 @@
                 <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
                 Destination
             </div>
-            <ul class="sla-dest-list" id="sla-dest-list"></ul>
+            <ul class="sla-dest-list" id="sla-dest-list">
+                {% for destination in sla_weights %}
+                    <li>
+                        <a class="sla-dest-item" data-dest="{{ destination.destination_iata }}">
+                            {{ destination.destination_iata }}
+                            <span class="sla-dest-count">{{ destination.total_weight|floatformat:1 }} lbs</span>
+                        </a>
+                    </li>
+
+                {% endfor %}
+                <li>
+                    <div style="display:flex; align-items:center; justify-content:space-between; padding:0.75rem 1rem;border-top:1px solid var(--border);margin-top:0.3rem;">
+                        <span style="font-size:0.7rem;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:var(--muted)">Total</span>
+                        <span style="font-family:'Barlow Condensed',sans-serif;font-size:1rem;font-weight:800;color:var(--accent)">{{ total_weight }} lbs</span>
+                    </div>
+                </li>
+            </ul>
         </aside>
+        <div class="sla-content" style="background:var(--navy-mid);border:1px solid var(--border);border-radius:12px;padding:1.2rem 1.4rem;">
+            <div class="sla-content-header">
+                <div class="sla-dest-heading" id="sla-dest-heading">
+                    Select a destination
+                </div>
+            </div>
+            <div class="sla-placeholder" id="sla-placeholder">
+                <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+                <p>Click a destination on the left to view its SLA data.</p>
+            </div>
+
+            <div class="table-wrapper" id="sla-table-wrapper" style="display:none;border:none;border-radius:0;background:transparent">
+                <div class="table-scroll">
+                    {% for dest, rows in destinations.items %}
+                    <table class="section-table sla-dest-table" id="sla-table-{{ dest }}" style="display:none">
+                        <thead>
+                            <tr>
+                                <th>AWB #</th>
+                                <th>Consignee</th>
+                                <th>Pieces</th>
+                                <th>Weight</th>
+                                <th>Days on Hand</th>
+                                <th>Hours Remaining</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for row in rows %}
+                            <tr>
+                                <td>{{ row.awb_number }}</td>
+                                <td>{{ row.consignee }}</td>
+                                <td>{{ row.pieces_on_hand }}</td>
+                                <td>{{ row.weight_on_hand }}</td>
+                                <td>{{ row.days_on_hand }}</td>
+                                <td>{{ row.hours_remaining }}</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
     </div>
+{% endblock %}
+
+{% block script %}
+    <script type="module" src="{% static 'js/sla.js' %}"></script>
 {% endblock %}
