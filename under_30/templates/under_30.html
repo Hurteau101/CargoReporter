@@ -1,0 +1,80 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block css %}
+    <link rel="stylesheet" href="{% static 'css/under_30.css' %}">
+{% endblock %}
+{% block content %}
+    <div class="section-header">
+        <div class="section-title">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="color:var(--accent);vertical-align:middle;margin-right:6px"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+            Under <span>30 Hours</span>
+        </div>
+    </div>
+
+    <div class="section-stats" style="grid-template-columns:repeat(4,1fr); margin-bottom:1.6rem">
+        <div class="section-stat"><span class="section-stat-label">Total Shipments</span><span class="section-stat-value" id="total-stat" style="color:var(--accent)">{{ stats.total }}</span></div>
+        <div class="section-stat"><span class="section-stat-label">Critical (&lt;6 hrs)</span><span class="section-stat-value" id="critical-stat" style="color:var(--danger)">{{ stats.under_6 }}</span></div>
+        <div class="section-stat"><span class="section-stat-label">Warning (6–15 hrs)</span><span class="section-stat-value" id="warning-stat" style="color:var(--warning)">{{ stats.between_6_15 }}</span></div>
+        <div class="section-stat"><span class="section-stat-label">OK (16–30 hrs)</span><span class="section-stat-value" id="ok-stat" style="color:var(--success)">{{ stats.between_15_30 }}</span></div>
+    </div>
+
+    <div class="section-table-wrap">
+        <div class="section-table-scroll">
+            <table class="section-table">
+                <thead>
+                    <tr>
+                        <th>AWB #</th>
+                        <th>Destination</th>
+                        <th>Consignee</th>
+                        <th>Pieces</th>
+                        <th>Weight (lbs)</th>
+                        <th>Days on Hand</th>
+                        <th>Hours Remaining</th>
+                        <th>Sent</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody id="under-30-table-body">
+                {% for awb in awb_list %}
+                    <tr data-row-id="{{ awb.awb_number }}" class="{% if awb.sent %} row-sent {% endif %}">
+                        <td><strong style="color:var(--ice)">{{ awb.awb_number }}</strong></td>
+                        <td>{{ awb.destination_iata }}</td>
+                        <td>{{ awb.consignee|title }}</td>
+                        <td style="text-align:center">{{ awb.pieces_on_hand }}</td>
+                        <td style="text-align:center">{{ awb.weight_on_hand }}</td>
+                        <td style="text-align:center">{{ awb.days_on_hand }} Day{{ awb.days_on_hand|pluralize }}</td>
+                        <td style="text-align:center">
+                            {% if awb.hours_remaining < 6 %}
+                                <span class="badge badge-red">{{ awb.hours_remaining }} hrs</span>
+                            {% elif awb.hours_remaining <= 15 %}
+                                <span class="badge badge-amber">{{ awb.hours_remaining }} hrs</span>
+                            {% else %}
+                                <span class="badge badge-green">{{ awb.hours_remaining }} hrs</span>
+                            {% endif %}
+                        </td>
+                        <td class="sent-cell">
+                            <label for="{{ awb.awb_number }}"></label>
+                            <input type="checkbox" {% if awb.sent %} checked {% endif %} class="sent-checkbox" id="{{ awb.awb_number }}">
+                        </td>
+
+                        <td>
+                            <button class="btn-img" id="{{ awb.awb_number }}" style="white-space:nowrap">
+                                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                                Transfer
+                            </button>
+                        </td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+{% endblock %}
+{% block script %}
+    <script>
+        const CSRF_TOKEN = '{{ csrf_token }}'
+        const AWB_LIST = {{ awb_json|safe }};
+    </script>
+    <script type="module" src="{% static 'js/under_30.js' %}"></script>
+{% endblock %}

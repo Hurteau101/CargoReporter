@@ -12,7 +12,7 @@ class Migration(migrations.Migration):
 
     operations = [
         migrations.CreateModel(
-            name='AWBData',
+            name='AWBStatus',
             fields=[
                 ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('awb_number', models.CharField(max_length=50, unique=True)),
@@ -26,18 +26,8 @@ class Migration(migrations.Migration):
                 ('sent', models.BooleanField(default=False)),
             ],
             options={
-                'verbose_name_plural': 'AWB Data',
-                'db_table': 'awb_data',
-            },
-        ),
-        migrations.CreateModel(
-            name='DuplicateAWB',
-            fields=[
-                ('awb_number', models.CharField(max_length=12, primary_key=True, serialize=False)),
-            ],
-            options={
-                'verbose_name_plural': 'Duplicate AWBs',
-                'db_table': 'duplicate_awb',
+                'verbose_name_plural': 'AWB Status',
+                'db_table': 'awb_status',
             },
         ),
     ]
