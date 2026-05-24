@@ -45,7 +45,8 @@ INSTALLED_APPS = [
     "awb_status",
     "freighters",
     "clients",
-    "sla"
+    "sla",
+    "duplication"
 ]
 
 MIDDLEWARE = [

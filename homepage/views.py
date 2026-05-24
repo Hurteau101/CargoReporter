@@ -1,19 +1,18 @@
 import os
 import json
 from collections import Counter
-
 from django.contrib import messages
 from django.http import JsonResponse, HttpResponse
 from django.shortcuts import render
 from django.views import View
-
+from duplication.models import DuplicateAWB
+from sla.models import SLA
 from freighters.models import Freighters
 from awb_status.models import AWBStatus
 from .forms import SLAUploadForm
 import pandas as pd
 import re
 from under_30.models import AWBUnder30Hours
-from homepage.models import DuplicateAWB
 from datetime import datetime
 
 # WE NEED TO CHECK THAT IT STARTS WITH WPG -- SINCE SOMETIMES THERE IS THOMPSON
@@ -36,7 +35,10 @@ def _read_file(file) -> pd.DataFrame:
     return pd.read_excel(file, header=1)
 
 def _extract_data(awb_data: dict):
-    awb_data_rows = []
+    under_30_hours_rows = []
+    sla_rows = []
+    awb_number_list = []
+    duplicate_rows = []
 
     for destination, information in awb_data.items():
         for awb_information in information:
@@ -51,29 +53,63 @@ def _extract_data(awb_data: dict):
 
             days_on_hand = (current_date - awb_created_date).days
 
-            awb_data_rows.append(AWBUnder30Hours(
-                awb_number=awb_information['AWB No.'].replace("632-", ''),
-                destination_iata=destination,
-                consignee=awb_information['Consignee'],
-                pieces_on_hand=awb_information['Pcs On Hand'],
-                weight_on_hand=awb_information['Wgt On Hand'],
-                days_on_hand=days_on_hand,
-                hours_remaining=int(sla),
-                priority=int(priority),
-                description=awb_information['Goods'],
-            ))
+            sla = int(sla)
 
-    awb_counts = Counter(row.awb_number for row in awb_data_rows)
-    duplicates = [awb for awb, count in awb_counts.items() if count > 1]
+            awb_number = awb_information['AWB No.'].replace("632-", '')
+            awb_number_list.append(awb_number)
+
+            if awb_number_list.count(awb_number) > 1:
+                duplicate_rows.append(DuplicateAWB(
+                    awb_number=awb_number,
+                    destination_iata=destination,
+                ))
+
+            if sla <= 30:
+                under_30_hours_rows.append(AWBUnder30Hours(
+                    awb_number=awb_information['AWB No.'].replace("632-", ''),
+                    destination_iata=destination,
+                    consignee=awb_information['Consignee'],
+                    pieces_on_hand=awb_information['Pcs On Hand'],
+                    weight_on_hand=awb_information['Wgt On Hand'],
+                    days_on_hand=days_on_hand,
+                    hours_remaining=int(sla),
+                    priority=int(priority),
+                    description=awb_information['Goods'],
+                ))
+
+            if sla < 0:
+                sla_rows.append(SLA(
+                    awb_number=awb_information['AWB No.'].replace("632-", ''),
+                    destination_iata=destination,
+                    consignee=awb_information['Consignee'],
+                    pieces_on_hand=awb_information['Pcs On Hand'],
+                    weight_on_hand=awb_information['Wgt On Hand'],
+                    days_on_hand=days_on_hand,
+                    hours_remaining=int(sla),
+                    priority=int(priority),
+                ))
 
     AWBUnder30Hours.objects.bulk_create(
-        awb_data_rows,
+        under_30_hours_rows,
         update_conflicts=True,
         unique_fields=['awb_number'],
         update_fields=['consignee', 'pieces_on_hand', 'weight_on_hand', 'destination_iata']
     )
 
-    DuplicateAWB.objects.bulk_create([DuplicateAWB(awb_number=awb) for awb in duplicates], batch_size=300, ignore_conflicts=True)
+    SLA.objects.bulk_create(
+        sla_rows,
+        update_conflicts=True,
+        unique_fields=['awb_number'],
+        update_fields=['consignee', 'pieces_on_hand', 'weight_on_hand', 'destination_iata']
+    )
+
+    DuplicateAWB.objects.bulk_create(
+        duplicate_rows,
+        update_conflicts=True,
+        unique_fields=['awb_number'],
+        update_fields=['destination_iata']
+    )
+
 
 
 def extract_destination(value) -> str | None:
