@@ -1,5 +1,5 @@
 from django.contrib import admin
 
-from homepage.models import AWBData, DuplicateAWB
+from homepage.models import DuplicateAWB
 
-admin.site.register([AWBData, DuplicateAWB])
+admin.site.register([DuplicateAWB])
