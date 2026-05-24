@@ -12,7 +12,7 @@
     </div>
     <div class="section-table-wrap">
         <div class="section-table-scroll">
-            <table class="section-table">
+            <table class="section-table" id="awb-status-table">
                 <thead>
                     <tr>
                         <th>AWB #</th>
@@ -64,4 +64,7 @@
             </table>
         </div>
     </div>
+{% endblock %}
+{% block script %}
+    <script type="module" src="{% static 'js/awb_status.js' %}"></script>
 {% endblock %}
