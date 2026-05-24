@@ -31,6 +31,7 @@ class TransferAWBView(View):
                 'weight_on_hand': body.get("weight"),
                 'days_on_hand': body.get("days"),
                 'priority': body.get("priority"),
+                'description': body.get("description"),
             }
         )
 
@@ -53,6 +54,8 @@ class Under30View(View):
             between_15_30=Count('awb_number', filter=Q(hours_remaining__range=[16, 30]))
         )
 
+
+
         awb_json = json.dumps([{
             'awb_number': awb.awb_number,
             'destination': awb.destination_iata,
@@ -62,8 +65,8 @@ class Under30View(View):
             'days': awb.days_on_hand,
             'hours': awb.hours_remaining,
             "priority": awb.priority,
+            "description": awb.description,
         } for awb in awbs], default=str)
-
 
 
         return render(request, 'under_30.html', context={'stats': stats, "awb_list": awbs, "awb_json": awb_json})
