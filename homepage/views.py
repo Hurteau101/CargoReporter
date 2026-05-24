@@ -7,6 +7,7 @@ from django.http import JsonResponse, HttpResponse
 from django.shortcuts import render
 from django.views import View
 
+from under_30.models import AWBStatus
 from .forms import SLAUploadForm
 import pandas as pd
 import re
@@ -112,6 +113,7 @@ class ClearDeleteView(View):
         model_mapper = {
             "duplicate_awbs": DuplicateAWB,
             "sla": AWBData,
+            "awb_status": AWBStatus,
         }
 
         body = json.loads(request.body)
