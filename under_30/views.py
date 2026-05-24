@@ -35,10 +35,10 @@ class TransferAWBView(View):
             }
         )
 
-        deleted, _ = AWBData.objects.filter(awb_number=body.get("awb_number")).delete()
-
-        if not deleted:
-            return JsonResponse({"message": "AWB not found"}, status=404)
+        # deleted, _ = AWBData.objects.filter(awb_number=body.get("awb_number")).delete()
+        #
+        # if not deleted:
+        #     return JsonResponse({"message": "AWB not found"}, status=404)
 
         return HttpResponse(status=201)
 

@@ -6,12 +6,12 @@ createDataTable('under-30-table', {
     ]
 })
 
-function updateStats(hours) {
-    updateStatValue('total-stat', false)
-
-    const statId = hours < 6 ? 'critical-stat' : hours <= 15 ? 'warning-stat' : 'ok-stat';
-    updateStatValue(statId, false)
-}
+// function updateStats(hours) {
+//     updateStatValue('total-stat', false)
+//
+//     const statId = hours < 6 ? 'critical-stat' : hours <= 15 ? 'warning-stat' : 'ok-stat';
+//     updateStatValue(statId, false)
+// }
 
 
 const tbody = document.getElementById('under-30-table-body');
@@ -64,8 +64,8 @@ tbody.addEventListener('click', async(e) => {
                 return;
             }
 
-            row.remove();
-            updateStats(foundAwbData.hours)
+            // row.remove();
+            // updateStats(foundAwbData.hours)
             toastNotification(`Transferred AWB: ${awbNumber}`, true)
         }
     }
