@@ -42,7 +42,8 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'homepage',
     "under_30",
-    "awb_status"
+    "awb_status",
+    "freighters"
 ]
 
 MIDDLEWARE = [

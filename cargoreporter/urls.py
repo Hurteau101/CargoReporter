@@ -24,6 +24,7 @@ urlpatterns = [
     path('', include('homepage.urls')),
     path('', include('under_30.urls')),
     path('', include('awb_status.urls')),
+    path('', include('freighters.urls')),
 ]
 
 if settings.DEBUG:
