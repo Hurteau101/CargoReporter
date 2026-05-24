@@ -32,7 +32,7 @@ tbody.addEventListener('click', async(e) => {
         const foundAwbData = AWB_LIST.find(awb => awb.awb_number === awbNumber);
 
         if (foundAwbData) {
-            const response = await fetch(`/update-sent-awb/${awbNumber}`, {
+            const response = await fetch(`under_30/update-sent-awb/${awbNumber}`, {
                 "method": "PATCH",
                 "headers": {
                     "X-CSRFToken": CSRF_TOKEN,
@@ -55,7 +55,7 @@ tbody.addEventListener('click', async(e) => {
         const awbNumber = row.dataset.rowId;
         const foundAwbData = AWB_LIST.find(awb => awb.awb_number === awbNumber);
         if (foundAwbData) {
-            const response = await fetch('/transfer-awb', {
+            const response = await fetch('under_30/transfer-awb', {
                 "method": "POST",
                 "headers": {
                     "X-CSRFToken": CSRF_TOKEN,
