@@ -4,8 +4,8 @@ from django.http import HttpResponse, JsonResponse
 from django.shortcuts import render
 from django.views import View
 
-from homepage.models import AWBData
-from under_30.models import AWBStatus
+from under_30.models import AWBData
+from awb_status.models import AWBStatus
 
 
 class UpdateSentAWB(View):
