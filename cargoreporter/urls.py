@@ -22,8 +22,8 @@ from under_30.views import Under30View
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include('homepage.urls')),
-    path('under_30', include('under_30.urls')),
-    path('awb-status', include('awb_status.urls')),
+    path('under_30/', include('under_30.urls')),
+    path('awb-status/', include('awb_status.urls')),
     path('freighters/', include('freighters.urls')),
 ]
 
