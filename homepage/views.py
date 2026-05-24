@@ -58,6 +58,7 @@ def _extract_data(awb_data: dict):
                 days_on_hand=days_on_hand,
                 hours_remaining=int(sla),
                 priority=int(priority),
+                description=awb_information['Goods'],
             ))
 
     awb_counts = Counter(row.awb_number for row in awb_data_rows)
