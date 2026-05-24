@@ -3,7 +3,7 @@ import json
 from collections import Counter
 from django.contrib import messages
 from django.http import JsonResponse, HttpResponse
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.views import View
 from duplication.models import DuplicateAWB
 from sla.models import SLA
@@ -64,7 +64,7 @@ def _extract_data(awb_data: dict):
                     destination_iata=destination,
                 ))
 
-            if sla <= 30:
+            if sla < 0:
                 under_30_hours_rows.append(AWBUnder30Hours(
                     awb_number=awb_information['AWB No.'].replace("632-", ''),
                     destination_iata=destination,
@@ -77,7 +77,7 @@ def _extract_data(awb_data: dict):
                     description=awb_information['Goods'],
                 ))
 
-            if sla < 0:
+            if sla < 20000:
                 sla_rows.append(SLA(
                     awb_number=awb_information['AWB No.'].replace("632-", ''),
                     destination_iata=destination,
@@ -154,9 +154,16 @@ class ClearDeleteView(View):
             "30_hours": AWBUnder30Hours,
             "awb_status": AWBStatus,
             "freighters": Freighters,
+            "sla": SLA,
         }
 
         body = json.loads(request.body)
+
+        if body.get("tab_type", None) == "mass_clear":
+            for model in model_mapper.values():
+                model.objects.all().delete()
+
+            return JsonResponse(status=200, data={})
 
         model_instance = model_mapper.get(body.get("tab_type", None))
         if not model_instance:
@@ -227,4 +234,4 @@ class HomeView(View):
         awb_data = clean_group_data(df)
         _extract_data(awb_data)
 
-        return render(request, self.template_name, {'form': form})
+        return redirect('sla')

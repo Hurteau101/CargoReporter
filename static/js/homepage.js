@@ -31,7 +31,7 @@ clearBtns.forEach(btn => {
             return;
         }
 
-        toastNotification(`Deleted all data from ${tabName}`, true)
+        toastNotification(tabType !== 'mass_clear' ? `Deleted all data from ${tabName}` : 'Mass cleared all data', true)
 
 
     })

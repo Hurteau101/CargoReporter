@@ -25,7 +25,9 @@ export function updateStatValue(elementId, shouldIncrease=true) {
 
 export function createDataTable(tableId, options) {
     return $(`#${tableId}`).DataTable({
+        retrieve: true,
         paging: false,
+        searching: false,
         info: false,
         ordering: true,
         columnDefs: [

@@ -1,3 +1,6 @@
+import {createDataTable} from "./helpers.js";
+
+
 document.querySelectorAll('.sla-dest-item').forEach(destination => {
     destination.addEventListener('click', () => {
         const dest = destination.dataset.dest;
@@ -10,7 +13,10 @@ document.querySelectorAll('.sla-dest-item').forEach(destination => {
         document.getElementById('sla-placeholder').style.display = 'none';
 
         const table = document.getElementById(`sla-table-${dest}`);
-        if (table) table.style.display = 'table';
+        if (table) {
+            table.style.display = 'table';
+            createDataTable(table.id, {columnDefs: []});
+        }
 
         const rowCount = table.rows.length - 1;
         document.getElementById('sla-dest-heading').innerHTML = `${dest} <span>${rowCount} shipment${rowCount !== 1 ? 's' : ''}</span>`;
