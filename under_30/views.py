@@ -4,14 +4,14 @@ from django.http import HttpResponse, JsonResponse
 from django.shortcuts import render
 from django.views import View
 
-from under_30.models import AWBData
+from under_30.models import AWBUnder30Hours
 from awb_status.models import AWBStatus
 
 
 class UpdateSentAWB(View):
     def patch(self, request, awb_number):
         body = json.loads(request.body)
-        updated = AWBData.objects.filter(awb_number=awb_number).update(sent=body.get("status", False))
+        updated = AWBUnder30Hours.objects.filter(awb_number=awb_number).update(sent=body.get("status", False))
 
         if not updated:
             return JsonResponse({"message": "AWB not found"}, status=404)
@@ -36,9 +36,9 @@ class TransferAWBView(View):
             }
         )
 
-        found_awb = AWBData.objects.filter(awb_number=body.get("awb_number")).exists()
+        found_awb = AWBUnder30Hours.objects.filter(awb_number=body.get("awb_number")).exists()
         if found_awb:
-            AWBData.objects.filter(awb_number=body.get("awb_number")).update(has_been_transferred=True)
+            AWBUnder30Hours.objects.filter(awb_number=body.get("awb_number")).update(has_been_transferred=True)
 
         # deleted, _ = AWBData.objects.filter(awb_number=body.get("awb_number")).delete()
         #
@@ -50,7 +50,7 @@ class TransferAWBView(View):
 
 class Under30View(View):
     def get(self, request):
-        awbs = AWBData.objects.filter(hours_remaining__lt=30)
+        awbs = AWBUnder30Hours.objects.filter(hours_remaining__lt=30)
 
         stats = awbs.aggregate(
             total=Count('awb_number'),

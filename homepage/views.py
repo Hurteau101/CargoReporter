@@ -12,7 +12,7 @@ from awb_status.models import AWBStatus
 from .forms import SLAUploadForm
 import pandas as pd
 import re
-from under_30.models import AWBData
+from under_30.models import AWBUnder30Hours
 from homepage.models import DuplicateAWB
 from datetime import datetime
 
@@ -51,7 +51,7 @@ def _extract_data(awb_data: dict):
 
             days_on_hand = (current_date - awb_created_date).days
 
-            awb_data_rows.append(AWBData(
+            awb_data_rows.append(AWBUnder30Hours(
                 awb_number=awb_information['AWB No.'].replace("632-", ''),
                 destination_iata=destination,
                 consignee=awb_information['Consignee'],
@@ -66,7 +66,7 @@ def _extract_data(awb_data: dict):
     awb_counts = Counter(row.awb_number for row in awb_data_rows)
     duplicates = [awb for awb, count in awb_counts.items() if count > 1]
 
-    AWBData.objects.bulk_create(
+    AWBUnder30Hours.objects.bulk_create(
         awb_data_rows,
         update_conflicts=True,
         unique_fields=['awb_number'],
@@ -115,7 +115,7 @@ class ClearDeleteView(View):
     def delete(self, request):
         model_mapper = {
             "duplicate_awbs": DuplicateAWB,
-            "30_hours": AWBData,
+            "30_hours": AWBUnder30Hours,
             "awb_status": AWBStatus,
             "freighters": Freighters,
         }
