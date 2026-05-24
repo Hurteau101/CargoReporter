@@ -1,7 +1,10 @@
 import {toastNotification, updateStatValue, createDataTable} from "./helpers.js";
 
-createDataTable('under-30-table', {})
-
+createDataTable('under-30-table', {
+    columnDefs: [
+        { orderable: false, targets: [7, 8] }
+    ]
+})
 
 function updateStats(hours) {
     updateStatValue('total-stat', false)

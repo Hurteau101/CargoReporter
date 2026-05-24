@@ -15,7 +15,11 @@ addFreighterBtn.addEventListener('click', () => {
     addFreighterCard.classList.toggle('open');
 })
 
-createDataTable('freighter-table', {})
+createDataTable('freighter-table', {
+    columnDefs: [
+        { orderable: false, targets: 11 }
+    ],
+})
 
 
 freighterForm.addEventListener('submit', async(e) => {

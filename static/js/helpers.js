@@ -22,10 +22,20 @@ export function updateStatValue(elementId, shouldIncrease=true) {
 }
 
 export function createDataTable(tableId, options) {
-    new DataTable('.section-table', {
+    $(`#${tableId}`).DataTable({
         paging: false,
         info: false,
         searching: false,
+        ordering: true,
+        columnDefs: [
+            { orderable: false, targets: 11 }
+        ],
+        layout: {
+            topStart: null,
+            topEnd: null,
+            bottomStart: null,
+            bottomEnd: null,
+        },
         ...options
     });
 }

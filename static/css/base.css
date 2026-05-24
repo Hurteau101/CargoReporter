@@ -244,3 +244,9 @@ nav {
     cursor: pointer; transition: all 0.2s; white-space: nowrap;
 }
 
+.dt-empty {
+    text-align: center !important;
+    color: var(--muted) !important;
+    padding: 2rem !important;
+}
+
