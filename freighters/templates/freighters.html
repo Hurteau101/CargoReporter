@@ -153,11 +153,77 @@
         </div>
     </div>
 
+    <div class="modal-overlay" id="edit-modal">
+        <div class="modal">
+            <form id="edit-freighter-form" method="post">
+                <button class="modal-close" id="btn-close-edit" type="button">✕</button>
+                <div class="modal-title">Edit Freighter</div>
+                <div class="field-row">
+                    <div class="field-group">
+                        <label for="aircraft-type">Aircraft Type</label>
+                        {{ edit_form.aircraft_type }}
+                    </div>
+                    <div class="field-group">
+                        <label for="tail-number">Freighter Name / Tail #</label>
+                        {{ edit_form.tail_number }}
+                    </div>
+                    <div class="field-group">
+                        <label for="flight-number">Flight #</label>
+                        {{ edit_form.flight_number }}
+                    </div>
+                    <div class="field-group">
+                        <label for="departure">Departing From (IATA)</label>
+                        {{ edit_form.departure }}
+                    </div>
+                    <div class="field-group">
+                        <label for="destination">Destination (IATA)</label>
+                        {{ edit_form.destination }}
+                    </div>
+                    <div class="field-group">
+                        <label for="departure-time">Departure Time</label>
+                        {{ edit_form.departure_time }}
+                    </div>
+                    <div class="field-group">
+                        <label for="arrival-time">Arrival Time</label>
+                        {{ edit_form.arrival_time }}
+                    </div>
+                    <div class="field-group">
+                        <label for="status">Status</label>
+                        {{ edit_form.status }}
+                    </div>
+                    <div class="field-group">
+                        <label for="station-name-informed">Station Informed (Name)</label>
+                        {{ edit_form.station_informed_name }}
+                    </div>
+                    <div class="field-group" style="justify-content: flex-start; padding-top: 1.4rem;">
+                        <div class="checkbox-row">
+                            {{ edit_form.station_notified }}
+                            <label for="station-notified">Station Notified</label>
+                        </div>
+                    </div>
+                </div>
+                <div class="field-row">
+                    <div class="field-group" style="grid-column: span 2;">
+                        <label for="notes">Notes</label>
+                        {{ edit_form.notes }}
+                    </div>
+                </div>
+                <div class="form-actions">
+                    <button class="btn-save">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="vertical-align:middle;margin-right:4px"><polyline points="20 6 9 17 4 12"/></svg>
+                        Save Freighter
+                    </button>
+                    <button type="button" class="btn-cancel-form" id="btn-cancel-edit">Cancel</button>
+                </div>
+            </form>
+        </div>
+    </div>
 
 {% endblock %}
 {% block script %}
     <script>
         const CSRF_TOKEN = '{{ csrf_token }}'
+        const FREIGHTER_LIST = {{ freighter_list|safe }};
     </script>
     <script type="module" src="{% static 'js/freighters.js' %}"></script>
 {% endblock %}

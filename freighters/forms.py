@@ -26,5 +26,13 @@ class FreightersForm(forms.ModelForm):
         self.fields['aircraft_type'].choices = [('', '— Select —')] + list(self.fields['aircraft_type'].choices)[1:]
         self.fields['status'].choices = [('', '— Select —')] + list(self.fields['status'].choices)[1:]
 
+        if self.prefix:
+            for field_name in self.fields:
+                field = self.fields[field_name]
+                current_id = field.widget.attrs.get('id')
+
+                if current_id:
+                    field.widget.attrs['id'] = f"{self.prefix}-{current_id}"
+
 
 
