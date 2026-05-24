@@ -51,7 +51,7 @@ def _extract_data(awb_data: dict):
             days_on_hand = (current_date - awb_created_date).days
 
             awb_data_rows.append(AWBData(
-                awb_number=awb_information['AWB No.'],
+                awb_number=awb_information['AWB No.'].replace("632-", ''),
                 destination_iata=destination,
                 consignee=awb_information['Consignee'],
                 pieces_on_hand=awb_information['Pcs On Hand'],
