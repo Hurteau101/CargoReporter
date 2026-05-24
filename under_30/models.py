@@ -6,6 +6,7 @@ from homepage.models import AWBBase
 class AWBData(AWBBase):
     sent = models.BooleanField(default=False)
     hours_remaining = models.IntegerField(null=True, blank=True)
+    has_been_transferred = models.BooleanField(default=False)
 
     class Meta:
         db_table = 'awb_data'

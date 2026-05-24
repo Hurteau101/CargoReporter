@@ -46,6 +46,7 @@ tbody.addEventListener('click', async(e) => {
 
     if (e.target.closest('.btn-img')) {
         const row = e.target.closest('tr');
+        const btn = e.target.closest('.btn-img');
 
         const awbNumber = row.dataset.rowId;
         const foundAwbData = AWB_LIST.find(awb => awb.awb_number === awbNumber);
@@ -64,6 +65,9 @@ tbody.addEventListener('click', async(e) => {
                 return;
             }
 
+
+            btn.classList.add('transferred');
+            btn.textContent = 'Transferred';
             // row.remove();
             // updateStats(foundAwbData.hours)
             toastNotification(`Transferred AWB: ${awbNumber}`, true)

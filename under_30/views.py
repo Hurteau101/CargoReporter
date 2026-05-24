@@ -18,6 +18,7 @@ class UpdateSentAWB(View):
 
         return HttpResponse(status=204)
 
+
 class TransferAWBView(View):
     def post(self, request):
         body = json.loads(request.body)
@@ -34,6 +35,10 @@ class TransferAWBView(View):
                 'description': body.get("description"),
             }
         )
+
+        found_awb = AWBData.objects.filter(awb_number=body.get("awb_number")).exists()
+        if found_awb:
+            AWBData.objects.filter(awb_number=body.get("awb_number")).update(has_been_transferred=True)
 
         # deleted, _ = AWBData.objects.filter(awb_number=body.get("awb_number")).delete()
         #
