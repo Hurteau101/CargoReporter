@@ -37,7 +37,7 @@ def _extract_data(awb_data: dict):
 
     for destination, information in awb_data.items():
         for awb_information in information:
-            priority, sla = awb_information["PRI"].split(" ")
+            sla, priority = awb_information["PRI"].split(" ")
 
             # We want to skip any of these.
             if any([priority is None, sla is None, priority == "NA", sla == "NA"]):
@@ -118,13 +118,13 @@ class ClearDeleteView(View):
 
         model_instance = model_mapper.get(body.get("tab_type", None))
         if not model_instance:
-            return HttpResponse(
+            return JsonResponse(
                 status=400,
-                content=json.dumps({"message": "Invalid Delete Type"})
+                data=json.dumps({"message": "Invalid Delete Type"})
             )
 
         model_instance.objects.all().delete()
-        return HttpResponse(status=200)
+        return JsonResponse(status=200, data={})
 
 class HomeView(View):
     template_name = 'homepage.html'
