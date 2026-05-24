@@ -1,12 +1,15 @@
 from django.db import models
+
 from homepage.models import AWBBase
 
-class AWBStatus(AWBBase):
-    image_url = models.URLField(null=True, blank=True)
+
+class AWBData(AWBBase):
+    sent = models.BooleanField(default=False)
+    hours_remaining = models.IntegerField(null=True, blank=True)
 
     class Meta:
-        verbose_name_plural = 'AWB Status'
-        db_table = 'awb_status'
+        db_table = 'awb_data'
+        verbose_name_plural = 'AWB Data'
 
     def __str__(self):
         return self.awb_number

@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from django.views import View
 
-from under_30.models import AWBStatus
+from awb_status.models import AWBStatus
 
 
 class AWBStatusView(View):

@@ -8,11 +8,12 @@ from django.shortcuts import render
 from django.views import View
 
 from freighters.models import Freighters
-from under_30.models import AWBStatus
+from awb_status.models import AWBStatus
 from .forms import SLAUploadForm
 import pandas as pd
 import re
-from homepage.models import AWBData, DuplicateAWB
+from under_30.models import AWBData
+from homepage.models import DuplicateAWB
 from datetime import datetime
 
 # WE NEED TO CHECK THAT IT STARTS WITH WPG -- SINCE SOMETIMES THERE IS THOMPSON

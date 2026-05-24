@@ -17,16 +17,6 @@ class AWBBase(models.Model):
         abstract = True
 
 
-class AWBData(AWBBase):
-    sent = models.BooleanField(default=False)
-    hours_remaining = models.IntegerField(null=True, blank=True)
-
-    class Meta:
-        db_table = 'awb_data'
-        verbose_name_plural = 'AWB Data'
-
-    def __str__(self):
-        return self.awb_number
 
 class DuplicateAWB(models.Model):
     awb_number = models.CharField(max_length=12, primary_key=True)
