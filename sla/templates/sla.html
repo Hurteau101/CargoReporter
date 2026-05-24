@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block css %}
+    <link rel="stylesheet" href="{% static 'css/sla.css' %}">
+{% endblock %}
+{% block content %}
+    <div class="sla-layout">
+        <aside class="sla-sidebar">
+            <div class="sla-sidebar-title">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+                Destination
+            </div>
+            <ul class="sla-dest-list" id="sla-dest-list"></ul>
+        </aside>
+    </div>
+{% endblock %}

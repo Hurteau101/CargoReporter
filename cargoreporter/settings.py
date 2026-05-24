@@ -44,7 +44,8 @@ INSTALLED_APPS = [
     "under_30",
     "awb_status",
     "freighters",
-    "clients"
+    "clients",
+    "sla"
 ]
 
 MIDDLEWARE = [
