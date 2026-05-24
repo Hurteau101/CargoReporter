@@ -1,4 +1,4 @@
-import {toastNotification, createDataTable} from "./helpers.js";
+import {toastNotification, createDataTable, postForm} from "./helpers.js";
 
 const freighterForm = document.getElementById('add-freighter-form')
 const addFreighterBtn = document.getElementById('btn-add-freighter')
@@ -15,37 +15,6 @@ cancelEditModalBtn.addEventListener('click', () => document.getElementById('edit
 freighterForm.addEventListener('submit', async(e) => {
     await postForm(e, freighterForm, '/freighters/add-freighter/', 'POST', new FormData(freighterForm), 'Freighter added successfully')
 })
-
-
-async function postForm(e, freighterForm, url, method, formData, successMessage, showFreighterCard = true) {
-    e.preventDefault();
-
-    const response = await fetch(url, {
-        method: method,
-        headers: {
-            "X-CSRFToken": CSRF_TOKEN,
-            "Accept": "application/json",
-            "X-Requested-With": "XMLHttpRequest",
-        },
-        body: formData
-    })
-
-    if (!response.ok) {
-        const responseData = await response.json();
-
-        responseData.errors.forEach(error => {
-            toastNotification(error, false);
-        });
-        return;
-    }
-
-    sessionStorage.setItem('toast', JSON.stringify({
-        message: successMessage,
-        shouldOpenFreighterCard: showFreighterCard,
-    }));
-
-    window.location.reload();
-}
 
 
 document.querySelectorAll('.modal-close').forEach(closeBtn => {
@@ -74,7 +43,7 @@ freightTbody.querySelectorAll('[data-del]').forEach(btn => {
 
         sessionStorage.setItem('toast', JSON.stringify({
             message: "Freighter Deleted Successfully",
-            shouldOpenFreighterCard: false,
+            shouldOpenCard: false,
         }));
 
         window.location.reload();
@@ -119,7 +88,7 @@ const savedToast = sessionStorage.getItem('toast');
 if (savedToast) {
     const toastData = JSON.parse(savedToast);
     toastNotification(toastData.message, true);
-    if (toastData.shouldOpenFreighterCard) {
+    if (toastData.shouldOpenCard) {
         addFreighterCard.classList.add('open');
     }
     sessionStorage.removeItem('toast');

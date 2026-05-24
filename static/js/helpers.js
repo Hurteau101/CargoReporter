@@ -41,3 +41,33 @@ export function createDataTable(tableId, options) {
         ...options
     });
 }
+
+export async function postForm(e, freighterForm, url, method, formData, successMessage, showFreighterCard = true) {
+    e.preventDefault();
+
+    const response = await fetch(url, {
+        method: method,
+        headers: {
+            "X-CSRFToken": CSRF_TOKEN,
+            "Accept": "application/json",
+            "X-Requested-With": "XMLHttpRequest",
+        },
+        body: formData
+    })
+
+    if (!response.ok) {
+        const responseData = await response.json();
+
+        responseData.errors.forEach(error => {
+            toastNotification(error, false);
+        });
+        return;
+    }
+
+    sessionStorage.setItem('toast', JSON.stringify({
+        message: successMessage,
+        shouldOpenCard: showFreighterCard,
+    }));
+
+    window.location.reload();
+}

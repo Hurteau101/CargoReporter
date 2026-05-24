@@ -43,7 +43,8 @@ INSTALLED_APPS = [
     'homepage',
     "under_30",
     "awb_status",
-    "freighters"
+    "freighters",
+    "clients"
 ]
 
 MIDDLEWARE = [
