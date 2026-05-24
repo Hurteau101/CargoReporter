@@ -42,8 +42,8 @@
                         <td>{{ awb.consignee|title }}</td>
                         <td style="text-align:center">{{ awb.pieces_on_hand }}</td>
                         <td style="text-align:center">{{ awb.weight_on_hand }}</td>
-                        <td style="text-align:center">{{ awb.days_on_hand }} Day{{ awb.days_on_hand|pluralize }}</td>
-                        <td style="text-align:center">
+                        <td style="text-align:center" data-sort={{ awb.days_on_hand }}>{{ awb.days_on_hand }} Day{{ awb.days_on_hand|pluralize }}</td>
+                        <td style="text-align:center" data-sort={{ awb.hours_remaining }}>
                             {% if awb.hours_remaining < 6 %}
                                 <span class="badge badge-red">{{ awb.hours_remaining }} hrs</span>
                             {% elif awb.hours_remaining <= 15 %}

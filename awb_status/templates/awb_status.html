@@ -33,7 +33,7 @@
                         <td>{{ awb.consignee }}</td>
                         <td>{{ awb.pieces_on_hand }}</td>
                         <td>{{ awb.weight_on_hand }}</td>
-                        <td>
+                        <td data-sort={{ awb.days_on_hand }}>
                             {% if awb.days_on_hand < 24 %}
                                 <span class="badge badge-red">{{ awb.days_on_hand }} Day{{ awb.days_on_hand|pluralize }}</span>
                             {% elif awb.days_on_hand < 30 %}
