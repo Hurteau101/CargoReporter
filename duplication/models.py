@@ -3,7 +3,7 @@ from django.db import models
 
 
 class DuplicateAWB(models.Model):
-    awb_number = models.CharField(max_length=12, unique=True)
+    awb_number = models.CharField(max_length=12, primary_key=True)
     destination_iata = models.CharField(max_length=10)
 
     class Meta:

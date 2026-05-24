@@ -27,6 +27,7 @@ urlpatterns = [
     path('freighters/', include('freighters.urls')),
     path('clients/', include('clients.urls')),
     path('sla/', include('sla.urls')),
+    path('duplication/', include('duplication.urls')),
 ]
 
 if settings.DEBUG:
