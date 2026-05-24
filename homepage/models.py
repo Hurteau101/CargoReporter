@@ -11,7 +11,7 @@ class AWBBase(models.Model):
     weight_on_hand = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True)
     days_on_hand = models.IntegerField(null=True, blank=True)
     priority = models.IntegerField(null=True, blank=True)
-
+    description = models.TextField(null=True, blank=True)
 
     class Meta:
         abstract = True
