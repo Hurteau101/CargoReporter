@@ -64,7 +64,7 @@ def _extract_data(awb_data: dict):
                     destination_iata=destination,
                 ))
 
-            if sla < 0:
+            if sla <= 30:
                 under_30_hours_rows.append(AWBUnder30Hours(
                     awb_number=awb_information['AWB No.'].replace("632-", ''),
                     destination_iata=destination,
@@ -77,7 +77,7 @@ def _extract_data(awb_data: dict):
                     description=awb_information['Goods'],
                 ))
 
-            if sla < 20000:
+            if sla < 0:
                 sla_rows.append(SLA(
                     awb_number=awb_information['AWB No.'].replace("632-", ''),
                     destination_iata=destination,
