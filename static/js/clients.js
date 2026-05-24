@@ -89,9 +89,11 @@ clientTbody.querySelectorAll('[data-edit]').forEach(btn => {
     })
 })
 
-createDataTable('client-table', {
-    columnDefs: [
-        { orderable: false, targets: 5 },
-
-    ],
+const table = createDataTable('client-table', {
+    searching: true,
+    columnDefs: [{ orderable: false, targets: 5 }],
 })
+
+document.getElementById('client-search').addEventListener('input', function() {
+    table.search(this.value).draw();
+});
