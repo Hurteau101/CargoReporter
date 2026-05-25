@@ -26,10 +26,9 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = os.getenv("SECRET_KEY")
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = os.getenv("PRODUCTION", "false") != "true"
 
 ALLOWED_HOSTS = ["127.0.0.1:8000", "127.0.0.1", "localhost", "cargo-reporter.ca", "www.cargo-reporter.ca"]
-
 
 # Application definition
 
@@ -200,7 +199,7 @@ SOCIALACCOUNT_PROVIDERS = {
 }
 
 LOGIN_URL = '/accounts/login/'
-ACCOUNT_DEFAULT_HTTP_PROTOCOL = 'https'
+ACCOUNT_DEFAULT_HTTP_PROTOCOL = 'http' if DEBUG else 'https'
 SOCIALACCOUNT_ONLY = True
 SOCIALACCOUNT_LOGIN_ON_GET = True
 # ACCOUNT_MESSAGES_ON_LOGIN = False
