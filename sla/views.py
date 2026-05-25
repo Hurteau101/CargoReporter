@@ -3,8 +3,6 @@ from django.db.models import Sum
 from django.shortcuts import render
 from django.views import View
 from sla.models import SLA
-
-
 class SLAView(View):
     def get(self, request):
         sla = SLA.objects.all()

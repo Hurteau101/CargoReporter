@@ -25,7 +25,7 @@
                         <th>Image</th>
                     </tr>
                 </thead>
-                <tbody>
+                <tbody id="awb-status-tbody">
                 {% for awb in awb_status %}
                     <tr data-row-id="{{ awb.awb_number }}">
                         <td><strong>{{ awb.awb_number }}</strong></td>
@@ -44,12 +44,12 @@
                         </td>
                         <td>{{ awb.priority }}</td>
                         <td>
-                            {% if awb.image_url %}
-                                <button class="btn-img has-img">
+                            {% if awb.image %}
+                                <button class="btn-img has-img" data-awb="{{ awb.awb_number }}" data-image-url="{{ awb.image.url }}">
                                     <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/>
                                     </svg>
                                     View
-                                </button>`
+                                </button>
                             {% else %}
                                 <button class="btn-img">
                                     <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>
@@ -64,7 +64,37 @@
             </table>
         </div>
     </div>
+
+    <div class="img-modal-overlay" id="img-modal">
+        <div class="img-modal">
+            <button class="img-modal-close" id="img-modal-close">✕</button>
+            <div class="img-modal-title">AWB <span id="img-modal-awb"></span> — Image</div>
+
+            <div class="img-preview" id="img-preview">
+                <img id="img-preview-el" src="" alt="AWB Image">
+            </div>
+
+            <div class="img-upload-zone" id="img-upload-zone">
+                <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+                <p id="image-text">Click to upload an image<br><span style="font-size:0.72rem;opacity:0.6">JPG, PNG, GIF, WEBP supported</span></p>
+                <input type="file" id="img-file-input" accept="image/*" style="display:none">
+            </div>
+
+            <div class="img-modal-actions">
+                <button class="btn-save" disabled id="img-save-btn">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="vertical-align:middle;margin-right:4px"><polyline points="20 6 9 17 4 12"/></svg>
+                    Save Image
+                </button>
+                <button class="btn-remove-img" id="img-remove-btn" style="display:none">Remove Image</button>
+                <button class="btn-cancel-form" id="img-cancel-btn">Cancel</button>
+            </div>
+        </div>
+    </div>
+
 {% endblock %}
 {% block script %}
+    <script>
+        const CSRF_TOKEN = '{{ csrf_token }}'
+    </script>
     <script type="module" src="{% static 'js/awb_status.js' %}"></script>
 {% endblock %}

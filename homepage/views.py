@@ -14,6 +14,7 @@ import pandas as pd
 import re
 from under_30.models import AWBUnder30Hours
 from datetime import datetime
+import cloudinary.uploader
 
 # WE NEED TO CHECK THAT IT STARTS WITH WPG -- SINCE SOMETIMES THERE IS THOMPSON
 
@@ -146,6 +147,15 @@ def clean_group_data(df: pd.DataFrame) -> dict:
 
     return {dest: group.drop(columns='dest').to_dict('records') for dest, group in df.groupby('dest')}
 
+def _handle_image_delection():
+    images = [
+        image
+        for image in AWBStatus.objects.values('image')
+    ]
+
+    for image in images:
+        if image['image']:
+            cloudinary.uploader.destroy(image['image'])
 
 class ClearDeleteView(View):
     def delete(self, request):
@@ -161,16 +171,23 @@ class ClearDeleteView(View):
 
         if body.get("tab_type", None) == "mass_clear":
             for model in model_mapper.values():
+                if model == AWBStatus:
+                    _handle_image_delection()
+
                 model.objects.all().delete()
 
             return JsonResponse(status=200, data={})
 
         model_instance = model_mapper.get(body.get("tab_type", None))
+
         if not model_instance:
             return JsonResponse(
                 status=400,
                 data=json.dumps({"message": "Invalid Delete Type"})
             )
+
+        if model_instance == AWBStatus:
+            _handle_image_delection()
 
         model_instance.objects.all().delete()
         return JsonResponse(status=200, data={})

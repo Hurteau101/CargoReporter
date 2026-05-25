@@ -97,3 +97,8 @@
     background: var(--danger);
     color: white;
 }
+
+.btn-save:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
