@@ -10,7 +10,9 @@
 
         {% if messages %}
             {% for message in messages %}
-                <div class="upload-alert">{{ message }}</div>
+                {% if 'error' in message.tags %}
+                    <div class="upload-alert">{{ message }}</div>
+                {% endif %}
             {% endfor %}
         {% endif %}
 

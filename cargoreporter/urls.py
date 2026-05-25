@@ -28,6 +28,7 @@ urlpatterns = [
     path('clients/', include('clients.urls')),
     path('sla/', include('sla.urls')),
     path('duplication/', include('duplication.urls')),
+    path('accounts/', include('allauth.urls')),
 ]
 
 if settings.DEBUG:
