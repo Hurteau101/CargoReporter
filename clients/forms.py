@@ -12,7 +12,7 @@ class ClientForm(forms.ModelForm):
             "email": forms.EmailInput(attrs={"placeholder": "e.g JaneDoe@gmail.com", "id": "email"}),
             "destination_iata": forms.TextInput(attrs={"placeholder": "e.g. YYZ", "id": "destination"}),
             'notes': forms.Textarea(
-                attrs={'id': 'notes', 'placeholder': 'Any additional notes or information about the freighter.',
+                attrs={'id': 'notes', 'placeholder': 'Any additional notes or information about the client.',
                        'rows': 3}),
         }
 
