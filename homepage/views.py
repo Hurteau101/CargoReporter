@@ -14,9 +14,14 @@ import pandas as pd
 import re
 from under_30.models import AWBUnder30Hours
 from datetime import datetime
+import cloudinary
 import cloudinary.uploader
 
-# WE NEED TO CHECK THAT IT STARTS WITH WPG -- SINCE SOMETIMES THERE IS THOMPSON
+cloudinary.config(
+    cloud_name=os.getenv("CLOUD_NAME"),
+    api_key=os.getenv("API_KEY"),
+    api_secret=os.getenv("API_SECRET"),
+)
 
 
 VALID_COLUMN_HEADERS = {
