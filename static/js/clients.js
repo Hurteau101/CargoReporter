@@ -7,23 +7,28 @@ const clientTbody = document.getElementById('client-tbody');
 const cancelAddClientBtn = document.getElementById('btn-cancel-add');
 cancelAddClientBtn.addEventListener('click', () => addClientCard.classList.remove('open'))
 
+// Cancel Edit Modal
 const cancelEditModalBtn = document.getElementById('btn-cancel-edit');
 cancelEditModalBtn.addEventListener('click', () => document.getElementById('edit-modal').classList.remove('open'))
 
+// Close Edit Modal
 document.querySelectorAll('.modal-close').forEach(closeBtn => {
     closeBtn.addEventListener('click', () => document.getElementById('edit-modal').classList.remove('open'))
 })
 
+// Open add client section
 addClientBtn.addEventListener('click', () => {
     addClientCard.classList.toggle('open');
 })
 
 const clientForm = document.getElementById('add-client-form')
 
+// Add client
 clientForm.addEventListener('submit', async(e) => {
     await postForm(e, clientForm, '/clients/add-client/', 'POST', new FormData(clientForm), 'Client added successfully')
 })
 
+// Handle toast notification
 const savedToast = sessionStorage.getItem('toast');
 if (savedToast) {
     const toastData = JSON.parse(savedToast);
@@ -34,6 +39,7 @@ if (savedToast) {
     sessionStorage.removeItem('toast');
 }
 
+// Delete client
 clientTbody.querySelectorAll('[data-del]').forEach(btn => {
     btn.addEventListener('click', async(e) => {
         const clientId = btn.dataset.del;
@@ -62,17 +68,16 @@ clientTbody.querySelectorAll('[data-del]').forEach(btn => {
     })
 })
 
-
+// Edit client
 clientTbody.querySelectorAll('[data-edit]').forEach(btn => {
     btn.addEventListener('click', () => {
         document.getElementById('edit-modal').classList.add('open')
         const clientId = btn.dataset.edit;
 
+        // Backend passes the list of clients. Find the client number.
         const foundClient = CLIENT_LIST.find(client => client.id === Number(clientId));
 
         if (!foundClient) return;
-
-        console.log(foundClient)
 
         document.getElementById('edit-company').value = foundClient.company_name;
         document.getElementById('edit-contact-name').value = foundClient.contact_name;
@@ -89,11 +94,13 @@ clientTbody.querySelectorAll('[data-edit]').forEach(btn => {
     })
 })
 
+// Create data table (for sortability)
 const table = createDataTable('client-table', {
     searching: true,
     columnDefs: [{ orderable: false, targets: 5 }],
 })
 
+// Search functionality
 document.getElementById('client-search').addEventListener('input', function() {
     table.search(this.value).draw();
 });

@@ -2,6 +2,7 @@ import {toastNotification} from "./helpers.js";
 
 const duplicateTbody = document.getElementById('duplicate-table-body');
 
+// Delete Duplicate AWB
 duplicateTbody.querySelectorAll('[data-del]').forEach(btn => {
     btn.addEventListener('click', async(e) => {
         const duplicateAWB = btn.dataset.del;
@@ -27,6 +28,7 @@ duplicateTbody.querySelectorAll('[data-del]').forEach(btn => {
     })
 })
 
+// Handle toast notification
 const savedToast = sessionStorage.getItem('toast');
 if (savedToast) {
     toastNotification(savedToast, true);

@@ -1,3 +1,4 @@
+// Helper function for displaying toast notifications
 export function toastNotification(title, success=true, duration=2500, gravity="bottom", position="right", style={
     background: success ? "#16a34a" : "#dc3545",
     borderRadius: "8px",
@@ -14,15 +15,16 @@ export function toastNotification(title, success=true, duration=2500, gravity="b
     }).showToast();
 }
 
+// Helper function to update stat card values.
 export function updateStatValue(elementId, shouldIncrease=true) {
     const element = document.getElementById(elementId);
     if (element) {
 
         element.textContent = shouldIncrease ? Number(element.textContent) + 1 : Number(element.textContent) - 1;
-        // element.textContent = `${Number(element.textContent) - shouldIncrease ? 1 : -1}`;
     }
 }
 
+// Helper function to create data tables.
 export function createDataTable(tableId, options) {
     return $(`#${tableId}`).DataTable({
         retrieve: true,
@@ -43,6 +45,7 @@ export function createDataTable(tableId, options) {
     });
 }
 
+// Helper function to post forms.
 export async function postForm(e, freighterForm, url, method, formData, successMessage, showFreighterCard = true) {
     e.preventDefault();
 

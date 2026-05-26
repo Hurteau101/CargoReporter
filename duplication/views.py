@@ -1,9 +1,13 @@
 from django.http import JsonResponse
 from django.shortcuts import render
 from django.views import View
-
 from duplication.models import DuplicateAWB
 
+"""
+This view is in charge of handling:
+- Deleting duplicate AWBs
+- Displaying duplicate AWBs
+"""
 
 class DeleteDuplicateView(View):
     def delete(self, request, duplicate_awb):

@@ -1,11 +1,17 @@
 import json
-
 from django.http import JsonResponse
 from django.shortcuts import render
 from django.views import View
-
 from clients.forms import ClientForm
 from clients.models import Clients
+
+"""
+This view is in charge of:
+- Handling the creation of new clients
+- Handling the deletion of clients
+- Handling the editing of clients
+"""
+
 
 class DeleteClientView(View):
     def delete(self, request, client_id):
@@ -18,6 +24,8 @@ class DeleteClientView(View):
 class EditClientView(View):
     def post(self, request, client_id):
         client = Clients.objects.get(id=client_id)
+
+        # Add prefix to the form to ensure there are no duplicate HTML IDs and to distinguish between edit and add forms
         form = ClientForm(request.POST, instance=client, prefix="edit")
 
         if form.is_valid():
@@ -62,6 +70,7 @@ class ClientsView(View):
             'id', 'company_name', 'contact_name', 'email', 'destination_iata', 'notes'
         ))
 
+        # JSON format the clients for the frontend to use.
         client_list = json.dumps(client_list, default=str)
 
         return render(request, 'clients.html', context={

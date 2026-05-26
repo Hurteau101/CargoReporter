@@ -3,10 +3,14 @@ from django.db.models import Count, Q
 from django.http import HttpResponse, JsonResponse
 from django.shortcuts import render
 from django.views import View
-
 from under_30.models import AWBUnder30Hours
 from awb_status.models import AWBStatus
 
+"""
+This view is in charge of handling:
+- Updating the status of an AWB
+- Transferring an AWB to the AWB status table
+"""
 
 class UpdateSentAWB(View):
     def patch(self, request, awb_number):
@@ -40,11 +44,6 @@ class TransferAWBView(View):
         if found_awb:
             AWBUnder30Hours.objects.filter(awb_number=body.get("awb_number")).update(has_been_transferred=True)
 
-        # deleted, _ = AWBData.objects.filter(awb_number=body.get("awb_number")).delete()
-        #
-        # if not deleted:
-        #     return JsonResponse({"message": "AWB not found"}, status=404)
-
         return HttpResponse(status=201)
 
 
@@ -58,8 +57,6 @@ class Under30View(View):
             between_6_15=Count('awb_number', filter=Q(hours_remaining__range=[6, 15])),
             between_15_30=Count('awb_number', filter=Q(hours_remaining__range=[16, 30]))
         )
-
-
 
         awb_json = json.dumps([{
             'awb_number': awb.awb_number,

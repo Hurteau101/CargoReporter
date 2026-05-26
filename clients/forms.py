@@ -18,6 +18,10 @@ class ClientForm(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
+
+        # If there is a prefix attached, loop through all fields, and add the prefix
+        # we need this as we use this form twice and need to tell the difference between forms.
+        # As well ensure there are no duplicate HTML IDs.
         if self.prefix:
             for field_name in self.fields:
                 field = self.fields[field_name]

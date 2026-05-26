@@ -1,5 +1,7 @@
 from django.db import models
 
+
+# Which emails are allowed to access the website. Used by the custom adapter.
 class AllowedEmail(models.Model):
     email = models.EmailField()
 

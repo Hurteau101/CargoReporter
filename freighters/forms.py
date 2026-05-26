@@ -1,5 +1,4 @@
 from django import forms
-
 from freighters.models import Freighters
 
 
@@ -23,9 +22,14 @@ class FreightersForm(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
+
+        # Remove the default empty choice and replace it with '-- Select --'
         self.fields['aircraft_type'].choices = [('', '— Select —')] + list(self.fields['aircraft_type'].choices)[1:]
         self.fields['status'].choices = [('', '— Select —')] + list(self.fields['status'].choices)[1:]
 
+        # If there is a prefix attached, loop through all fields, and add the prefix
+        # we need this as we use this form twice and need to tell the difference between forms.
+        # As well ensure there are no duplicate HTML IDs.
         if self.prefix:
             for field_name in self.fields:
                 field = self.fields[field_name]

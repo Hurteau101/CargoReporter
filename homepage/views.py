@@ -1,8 +1,7 @@
 import os
 import json
-from collections import Counter
 from django.contrib import messages
-from django.http import JsonResponse, HttpResponse
+from django.http import JsonResponse
 from django.shortcuts import render, redirect
 from django.views import View
 from duplication.models import DuplicateAWB
@@ -17,13 +16,20 @@ from datetime import datetime
 import cloudinary
 import cloudinary.uploader
 
+"""
+This view is in charge of:
+- Handling the upload of SLA data
+- Deleting different types of data
+"""
+
+# Set the cloudinary configuration
 cloudinary.config(
     cloud_name=os.getenv("CLOUD_NAME"),
     api_key=os.getenv("API_KEY"),
     api_secret=os.getenv("API_SECRET"),
 )
 
-
+# Valid column headers that need to be in the excel file.
 VALID_COLUMN_HEADERS = {
     'awb date', 'awb no.', 'pcs rcvd', 'wgt rcvd', 'pcs on hand', 'wgt on hand', 'consignee', 'goods', 'remarks',
      'skid', 'pri', 'checked'
@@ -41,6 +47,10 @@ def _read_file(file) -> pd.DataFrame:
     return pd.read_excel(file, header=1)
 
 def _extract_data(awb_data: dict):
+    """
+    Extracts the awb data and saves it to the database
+    :param awb_data: Dictionary of grouped awb data.
+    """
     under_30_hours_rows = []
     sla_rows = []
     awb_number_list = []
@@ -154,6 +164,7 @@ def clean_group_data(df: pd.DataFrame) -> dict:
     return {dest: group.drop(columns='dest').to_dict('records') for dest, group in df.groupby('dest')}
 
 def _handle_image_delection():
+    """Handles the deletion of images from cloudinary."""
     images = [
         image
         for image in AWBStatus.objects.values('image')
@@ -165,6 +176,7 @@ def _handle_image_delection():
 
 class ClearDeleteView(View):
     def delete(self, request):
+        # Map the tab type to the model
         model_mapper = {
             "duplicate_awbs": DuplicateAWB,
             "30_hours": AWBUnder30Hours,
@@ -175,6 +187,7 @@ class ClearDeleteView(View):
 
         body = json.loads(request.body)
 
+        # If the tab type is mass clear, delete all data + images from cloudinary
         if body.get("tab_type", None) == "mass_clear":
             for model in model_mapper.values():
                 if model == AWBStatus:
@@ -192,6 +205,7 @@ class ClearDeleteView(View):
                 data=json.dumps({"message": "Invalid Delete Type"})
             )
 
+        # If the tab type is AWB Status, delete all images from cloudinary
         if model_instance == AWBStatus:
             _handle_image_delection()
 
@@ -208,7 +222,7 @@ class HomeView(View):
         awb_status_exists = AWBStatus.objects.exists()
         duplicate_awb_exists = DuplicateAWB.objects.exists()
 
-
+        # Creates the different tabs that can be cleared if there is data.
         tabs = {
             "SLA Tab": {
                 "description": "Removes all SLA data",
@@ -241,9 +255,6 @@ class HomeView(View):
                 "has_data": any([sla_exists, freighter_exists, under_30_exists, awb_status_exists, duplicate_awb_exists])
             }
         }
-
-
-
 
         return render(request, self.template_name, {
             'form': SLAUploadForm(),

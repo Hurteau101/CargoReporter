@@ -3,10 +3,15 @@ from django.db.models import Sum
 from django.shortcuts import render
 from django.views import View
 from sla.models import SLA
+
+"""
+This view is in charge of handling:
+- Displaying the SLA
+"""
 class SLAView(View):
     def get(self, request):
         sla = SLA.objects.all()
-        # sla_destination = sla.values_list('destination_iata', "hours_remaining").distinct()
+
         sla_weights = sla.values("destination_iata").annotate(
             total_weight=Sum("weight_on_hand")
         ).order_by("-total_weight")

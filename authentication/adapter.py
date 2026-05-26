@@ -1,13 +1,9 @@
-# authentication/adapter.py
 from allauth.socialaccount.adapter import DefaultSocialAccountAdapter
 from allauth.exceptions import ImmediateHttpResponse
-from django.http import HttpResponseForbidden
-
-from allauth.account.adapter import DefaultAccountAdapter
 from django.shortcuts import render
 from authentication.models import AllowedEmail
 
-
+# Ensures that only allowed emails can log in with Google OAuth.
 class CustomSocialAccountAdapter(DefaultSocialAccountAdapter):
     def pre_social_login(self, request, sociallogin):
         email = sociallogin.account.extra_data.get('email', '')

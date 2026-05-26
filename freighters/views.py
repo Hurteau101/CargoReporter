@@ -1,14 +1,18 @@
 import json
-
-from django.db.migrations import serializer
 from django.db.models import Count, Q
 from django.http import JsonResponse
 from django.shortcuts import render
 from django.views import View
 from freighters.forms import FreightersForm
 from freighters.models import Freighters
-from django.core import serializers
 
+"""
+This view is in charge of handling:
+- Deleting freighters
+- Displaying freighters
+- Adding freighters
+- Editing freighters
+"""
 
 class DeleteFreighterView(View):
     def delete(self, request, freighter_id):

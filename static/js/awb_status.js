@@ -5,32 +5,28 @@ const statusTbody = document.getElementById('awb-status-tbody');
 const cancelUploadModalBtn = document.getElementById('img-cancel-btn');
 cancelUploadModalBtn.addEventListener('click', () => document.getElementById('img-modal').classList.remove('open'))
 
+// Close modal
 document.querySelectorAll('.img-modal-close').forEach(closeBtn => {
     closeBtn.addEventListener('click', () => document.getElementById('img-modal').classList.remove('open'))
 })
 
-
-// statusTbody.querySelectorAll('.btn-img').forEach(btn => {
-//     btn.addEventListener('click', async(e) => {
-//         const row = btn.closest('tr');
-//         document.getElementById('img-modal-awb').textContent = row.dataset.rowId;
-//         document.getElementById('img-modal').classList.add('open');
-//     })
-// })
-
+// Open the edit or view modal
 statusTbody.querySelectorAll('.btn-img').forEach(btn => {
     btn.addEventListener('click', () => {
         const row = btn.closest('tr');
         document.getElementById('img-modal-awb').textContent = row.dataset.rowId;
         document.getElementById('img-modal').classList.add('open');
 
+        // Check if the image is already uploaded. To show view.
         if (btn.classList.contains('has-img')) {
             document.getElementById('img-preview-el').src = btn.dataset.imageUrl;
             document.getElementById('img-preview').style.display = 'block';
             document.getElementById('img-upload-zone').style.display = 'none';
             document.getElementById('img-save-btn').style.display = 'none';
             document.getElementById('img-remove-btn').style.display = 'inline-flex';
-        } else {
+        }
+        // If not, show the upload.
+        else {
             document.getElementById('img-preview').style.display = 'none';
             document.getElementById('img-upload-zone').style.display = 'block';
             document.getElementById('img-save-btn').style.display = 'inline-flex';
@@ -39,6 +35,7 @@ statusTbody.querySelectorAll('.btn-img').forEach(btn => {
     })
 })
 
+// Remove the image.
 document.getElementById('img-remove-btn').addEventListener('click', async() => {
     const awbNumber = document.getElementById('img-modal-awb').textContent;
 
@@ -56,6 +53,7 @@ document.getElementById('img-remove-btn').addEventListener('click', async() => {
     window.location.reload();
 })
 
+// Open file explorer
 document.getElementById('img-upload-zone').addEventListener('click', () => {
     document.getElementById('img-file-input').click();
 })
@@ -64,6 +62,7 @@ document.getElementById('img-upload-zone').addEventListener('click', () => {
 const formData = new FormData();
 const saveImage = document.getElementById('img-save-btn');
 
+// Save the image
 saveImage.addEventListener('click', async(e) => {
     e.preventDefault();
 
@@ -97,6 +96,7 @@ saveImage.addEventListener('click', async(e) => {
     window.location.reload();
 })
 
+// Set the name of image to image zone and disable button.
 document.getElementById('img-file-input').addEventListener('change', (e) => {
     formData.set('img', e.target.files[0]);
     document.getElementById('image-text').textContent = e.target.files[0].name;
@@ -104,13 +104,14 @@ document.getElementById('img-file-input').addEventListener('change', (e) => {
 })
 
 
+// Handle toast notification
 const savedToast = sessionStorage.getItem('toast');
 if (savedToast) {
     toastNotification(savedToast, true);
     sessionStorage.removeItem('toast');
 }
 
-
+// Create data table (for sortability)
 createDataTable('awb-status-table', {
     columnDefs: [
         { orderable: false, targets: [7] }
