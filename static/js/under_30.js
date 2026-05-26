@@ -19,9 +19,10 @@ const tbody = document.getElementById('under-30-table-body');
 tbody.addEventListener('click', async(e) => {
     if (e.target.closest('input[type="checkbox"]')) {
         const row = e.target.closest('tr');
-        row.classList.add('row-sent');
 
         const checkboxStatus = row.querySelector('input[type="checkbox"]').checked;
+
+        checkboxStatus ? row.classList.add('row-sent') : row.classList.remove('row-sent');
 
         const awbNumber = row.dataset.rowId;
         const foundAwbData = AWB_LIST.find(awb => awb.awb_number === awbNumber);
