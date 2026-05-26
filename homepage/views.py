@@ -83,6 +83,7 @@ def _extract_data(awb_data: dict):
                     awb_number=awb_information['AWB No.'].replace("632-", ''),
                     destination_iata=destination,
                     consignee=awb_information['Consignee'],
+                    description=awb_information['Goods'],
                     pieces_on_hand=awb_information['Pcs On Hand'],
                     weight_on_hand=awb_information['Wgt On Hand'],
                     days_on_hand=days_on_hand,
