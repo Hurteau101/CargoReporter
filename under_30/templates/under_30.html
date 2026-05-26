@@ -25,7 +25,7 @@
                     <tr>
                         <th>AWB #</th>
                         <th>Destination</th>
-                        <th>Consignee</th>
+                        <th>Description</th>
                         <th>Pieces</th>
                         <th>Weight (lbs)</th>
                         <th>Days on Hand</th>
@@ -39,7 +39,7 @@
                     <tr data-row-id="{{ awb.awb_number }}" class="{% if awb.sent %} row-sent {% endif %}">
                         <td><strong>{{ awb.awb_number }}</strong></td>
                         <td>{{ awb.destination_iata }}</td>
-                        <td>{{ awb.consignee|title }}</td>
+                        <td>{{ awb.description|title }}</td>
                         <td style="text-align:center">{{ awb.pieces_on_hand }}</td>
                         <td style="text-align:center">{{ awb.weight_on_hand }}</td>
                         <td style="text-align:center" data-sort={{ awb.days_on_hand }}>{{ awb.days_on_hand }} Day{{ awb.days_on_hand|pluralize }}</td>
