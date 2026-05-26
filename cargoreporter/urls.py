@@ -20,7 +20,6 @@ from django.conf import settings
 from under_30.views import Under30View
 
 urlpatterns = [
-    path('admin/', admin.site.urls),
     path('', include('homepage.urls')),
     path('under_30/', include('under_30.urls')),
     path('awb-status/', include('awb_status.urls')),
@@ -35,4 +34,5 @@ if settings.DEBUG:
     # Include django_browser_reload URLs only in DEBUG mode
     urlpatterns += [
         path("__reload__/", include("django_browser_reload.urls")),
+        path('admin/', admin.site.urls),
     ]
