@@ -89,6 +89,12 @@
     cursor: not-allowed;
 }
 
+.btn-clear:disabled,
+.btn-clear.btn-disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+}
+
 .btn-submit:hover {
     background: linear-gradient(135deg, var(--accent-dim), var(--steel));
     border-color: var(--accent);

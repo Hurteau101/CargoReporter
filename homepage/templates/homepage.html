@@ -55,7 +55,10 @@
                     <div class="home-admin-card-title">{{ tab_name }}</div>
                     <div class="home-admin-card-desc">{{ tab_details.description }}</div>
                 </div>
-                <button class="btn-clear home-btn-clear" data-tab="{{ tab_details.data_event_name }}" data-tab-name="{{ tab_name }}">
+                <button class="btn-clear home-btn-clear {% if not tab_details.has_data %}btn-disabled{% endif %}"
+                        data-tab="{{ tab_details.data_event_name }}"
+                        data-tab-name="{{ tab_name }}"
+                        {% if not tab_details.has_data %}disabled{% endif %}>
                     <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/></svg>
                     Clear
                 </button>

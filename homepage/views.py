@@ -202,32 +202,48 @@ class HomeView(View):
     template_name = 'homepage.html'
 
     def get(self, request):
+        sla_exists = SLA.objects.exists()
+        freighter_exists = Freighters.objects.exists()
+        under_30_exists = AWBUnder30Hours.objects.exists()
+        awb_status_exists = AWBStatus.objects.exists()
+        duplicate_awb_exists = DuplicateAWB.objects.exists()
+
+
         tabs = {
             "SLA Tab": {
                 "description": "Removes all SLA data",
-                "data_event_name": "sla"
+                "data_event_name": "sla",
+                "has_data": sla_exists
             },
             "Freighters": {
                 "description": "Removes all freighter data",
-                "data_event_name": "freighters"
+                "data_event_name": "freighters",
+                "has_data": freighter_exists
             },
             "30 Hour Tab": {
                 "description": "Removes all 30 hour data",
-                "data_event_name": "30_hours"
+                "data_event_name": "30_hours",
+                "has_data": under_30_exists
             },
             "AWB Status Tab": {
                 "description": "Removes all AWB status data",
-                "data_event_name": "awb_status"
+                "data_event_name": "awb_status",
+                "has_data": awb_status_exists
             },
             "Duplicate AWBs": {
                 "description": "Removes all duplicate AWBs",
-                "data_event_name": "duplicate_awbs"
+                "data_event_name": "duplicate_awbs",
+                "has_data": duplicate_awb_exists
             },
             "Mass Clear": {
                 "description": "Mass clears all data",
-                "data_event_name": "mass_clear"
+                "data_event_name": "mass_clear",
+                "has_data": any([sla_exists, freighter_exists, under_30_exists, awb_status_exists, duplicate_awb_exists])
             }
         }
+
+
+
 
         return render(request, self.template_name, {
             'form': SLAUploadForm(),

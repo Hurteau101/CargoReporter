@@ -9,11 +9,23 @@ document.getElementById("sla-file").addEventListener("change", function() {
 });
 
 const clearBtns = document.querySelectorAll(".btn-clear");
+const massClearBtn = document.querySelector('[data-tab="mass_clear"]');
 
 clearBtns.forEach(btn => {
     btn.addEventListener("click", async function(event) {
         const tabType = event.currentTarget.dataset.tab
         const tabName = event.currentTarget.dataset.tabName
+
+        btn.classList.add('btn-disabled')
+        btn.disabled = true;
+
+        if (tabType !== 'mass_clear') {
+            const otherBtns = [...clearBtns].filter(b => b.dataset.tab !== 'mass_clear');
+            if (otherBtns.every(b => b.disabled)) {
+                massClearBtn.disabled = true;
+                massClearBtn.classList.add('btn-disabled');
+            }
+        }
 
         const response = await fetch(`/delete`, {
             "method": "DELETE",
