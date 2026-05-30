@@ -54,7 +54,7 @@ class RemoveAWBScannerView(View):
 class GetAWBScannerView(View):
     def get(self, request):
 
-        already_scanned = AWBScanner.objects.all()
+        already_scanned = AWBScanner.objects.all().order_by('-scan_time')
 
         return render(request, 'scanner.html', context={
             'destinations': Destinations.choices,
