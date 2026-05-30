@@ -180,7 +180,7 @@ destination.addEventListener('change', () => {
     }
 });
 
-document.getElementById('scan-table-body').addEventListener('click', e => {
+document.getElementById('scan-table-body').addEventListener('click', async(e) => {
     const btn = e.target.closest('[data-del]');
     const awb = btn?.dataset.del;
     if (!btn) return;
@@ -198,7 +198,7 @@ document.getElementById('scan-table-body').addEventListener('click', e => {
         tbody.appendChild(tr);
     }
 
-    const response = fetch(`/awb-scanner/remove-awb-scanner/${awb}`, {
+    const response = await fetch(`/awb-scanner/remove-awb-scanner/${awb}`, {
         "method": "DELETE",
         "headers": {
             "X-CSRFToken": CSRF_TOKEN,
@@ -206,7 +206,7 @@ document.getElementById('scan-table-body').addEventListener('click', e => {
     })
 
     if (!response.ok) {
-        const responseData = response.json();
+        const responseData = await response.json();
         toastNotification(responseData.error, false);
         return;
     }
