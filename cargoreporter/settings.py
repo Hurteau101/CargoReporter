@@ -32,7 +32,8 @@ INSTALLED_APPS = [
     "clients",
     "sla",
     "duplication",
-    "authentication"
+    "authentication",
+    "awb_scanner"
 ]
 
 MIDDLEWARE = [
@@ -117,7 +118,7 @@ AUTH_PASSWORD_VALIDATORS = [
 ]
 
 LANGUAGE_CODE = 'en-us'
-TIME_ZONE = 'UTC'
+TIME_ZONE = 'America/Winnipeg'
 USE_I18N = True
 USE_TZ = True
 

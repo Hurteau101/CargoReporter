@@ -33,6 +33,7 @@ urlpatterns = [
     path('sla/', include('sla.urls')),
     path('duplication/', include('duplication.urls')),
     path('accounts/', include('allauth.urls')),
+    path('awb-scanner/', include('awb_scanner.urls')),
     path('access-denied/', access_denied, name='access_denied'),
 
 ]

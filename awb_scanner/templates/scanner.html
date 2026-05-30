@@ -1,0 +1,87 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block css %}
+    <link rel="stylesheet" href="{% static 'css/awb_scanner.css' %}">
+{% endblock %}
+{% block content %}
+    <div class="section-header">
+        <div class="section-title">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="color:var(--accent);vertical-align:middle;margin-right:6px"><path d="M3 7V5a2 2 0 0 1 2-2h2"/><path d="M17 3h2a2 2 0 0 1 2 2v2"/><path d="M21 17v2a2 2 0 0 1-2 2h-2"/><path d="M7 21H5a2 2 0 0 1-2-2v-2"/><line x1="7" y1="12" x2="17" y2="12"/><line x1="12" y1="7" x2="12" y2="17"/></svg>
+            AWB <span>Scanned</span>
+        </div>
+    </div>
+    <div style="display:grid;grid-template-columns:320px 1fr;gap:1.5rem;align-items:start">
+        <div>
+            <div style="background:var(--navy-mid);border:1px solid var(--border);border-radius:10px;padding:1.2rem;margin-bottom:1rem">
+                <div class="field-group" style="margin-bottom:1rem">
+                    <label for="scan-dest">Destination</label>
+                    <select id="scan-dest" style="width:100%">
+                        <option value="">— Select Destination —</option>
+                        {% for value, label in destinations %}
+                            <option value="{{ value }}">{{ label }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="field-group" style="margin-bottom:1rem">
+                    <label for="scan-awb">AWB #</label>
+                    <input maxlength="12" type="text" id="scan-awb" placeholder="Type or scan AWB…" autocomplete="off">
+                </div>
+                <button class="btn-save" id="btn-scan-add" style="width:100%;justify-content:center">
+                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="vertical-align:middle;margin-right:6px"><path d="M3 7V5a2 2 0 0 1 2-2h2"/><path d="M17 3h2a2 2 0 0 1 2 2v2"/><path d="M21 17v2a2 2 0 0 1-2 2h-2"/><path d="M7 21H5a2 2 0 0 1-2-2v-2"/><line x1="7" y1="12" x2="17" y2="12"/><line x1="12" y1="7" x2="12" y2="17"/></svg>
+                    Scan AWB
+                </button>
+            </div>
+        </div>
+        <div>
+            <div class="scan-grid-header">
+                <div class="scan-grid-title">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 7V5a2 2 0 0 1 2-2h2"/><path d="M17 3h2a2 2 0 0 1 2 2v2"/><path d="M21 17v2a2 2 0 0 1-2 2h-2"/><path d="M7 21H5a2 2 0 0 1-2-2v-2"/><line x1="7" y1="12" x2="17" y2="12"/><line x1="12" y1="7" x2="12" y2="17"/></svg>
+                    Scanned AWBs
+                </div>
+            </div>
+            <div class="scan-table-wrap">
+                <table class="scan-table" id="scan-table">
+                    <thead>
+                    <tr>
+                        <th style="mou">AWB #</th>
+                        <th>Destination</th>
+                        <th >Scan Count</th>
+                        <th>Scan Time</th>
+                        <th>Action</th>
+                    </tr>
+                    </thead>
+                    <tbody id="scan-table-body">
+                        {% if already_scanned %}
+                            {% for scan in already_scanned %}
+                                <tr data-awb="{{ scan.awb_number }}" data-dest="{{ scan.destination_iata }}">
+                                    <td style="cursor:pointer">{{ scan.awb_number  }}</td>
+                                    <td>{{ scan.destination_iata }}</td>
+                                    <td><span class="scan-count-badge">{{ scan.scan_count }}</span></td>
+                                    <td>{{ scan.scan_time|date:"M d, y" }} , {{ scan.scan_time|time:"h:i A" }}</td>
+                                    <td>
+                                        <div style="display:flex;gap:0.4rem">
+                                            <button class="btn-icon del" data-del="{{ scan.awb_number }}" title="Remove">
+                                                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/><path d="M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/></svg>
+                                            </button>
+                                        </div>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                        {% else %}
+                        <tr>
+                            <td colspan="5" class="dt-empty">No scanned AWBs found</td>
+                        </tr>
+                        {% endif %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+{% block script %}
+    <script>
+        const CSRF_TOKEN = '{{ csrf_token }}'
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/tom-select@2.3.1/dist/js/tom-select.complete.min.js"></script>
+    <script type="module" src="{% static 'js/awb_scanner.js' %}"></script>
+{% endblock %}
