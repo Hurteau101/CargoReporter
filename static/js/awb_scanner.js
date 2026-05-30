@@ -31,7 +31,7 @@ function addRow(awb, destination, count, time) {
     cells.forEach(value => {
         const td = document.createElement('td');
         td.textContent = value;
-        tr.prepend(td);
+        tr.appendChild(td);
     });
 
     const countTd = document.createElement('td');
@@ -55,7 +55,7 @@ function addRow(awb, destination, count, time) {
     actionTd.appendChild(btn);
     tr.appendChild(actionTd);
 
-    tbody.append(tr);
+    tbody.prepend(tr);
 }
 
 // Clipboard copy AWB number
