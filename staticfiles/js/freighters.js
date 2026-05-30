@@ -11,17 +11,17 @@ cancelAddFreighterBtn.addEventListener('click', () => addFreighterCard.classList
 const cancelEditModalBtn = document.getElementById('btn-cancel-edit');
 cancelEditModalBtn.addEventListener('click', () => document.getElementById('edit-modal').classList.remove('open'))
 
-
+// Add Freighter
 freighterForm.addEventListener('submit', async(e) => {
     await postForm(e, freighterForm, '/freighters/add-freighter/', 'POST', new FormData(freighterForm), 'Freighter added successfully')
 })
 
-
+// Close modal.
 document.querySelectorAll('.modal-close').forEach(closeBtn => {
     closeBtn.addEventListener('click', () => document.getElementById('edit-modal').classList.remove('open'))
 })
 
-
+// Delete Freighter
 freightTbody.querySelectorAll('[data-del]').forEach(btn => {
     btn.addEventListener('click', async(e) => {
         const freighterId = btn.dataset.del;
@@ -50,15 +50,17 @@ freightTbody.querySelectorAll('[data-del]').forEach(btn => {
     })
 })
 
-
+// Edit freighter.
 freightTbody.querySelectorAll('[data-edit]').forEach(btn => {
     btn.addEventListener('click', () => {
         document.getElementById('edit-modal').classList.add('open')
         const freighterId = btn.dataset.edit;
+
+        // Backend passes the list of freighters. Find the freighter ID.
         const foundFreighter = FREIGHTER_LIST.find(freighter => freighter.id === Number(freighterId));
 
+        // Format the time.
         const formatDateTime = (str) => str ? str.slice(0, 16).replace(' ', 'T') : '';
-
 
         if (!foundFreighter) return;
 
@@ -83,7 +85,7 @@ freightTbody.querySelectorAll('[data-edit]').forEach(btn => {
     })
 })
 
-
+// Handle toast notification
 const savedToast = sessionStorage.getItem('toast');
 if (savedToast) {
     const toastData = JSON.parse(savedToast);
@@ -94,10 +96,12 @@ if (savedToast) {
     sessionStorage.removeItem('toast');
 }
 
+// Open freighter section
 addFreighterBtn.addEventListener('click', () => {
     addFreighterCard.classList.toggle('open');
 })
 
+// Create data table (for sortability)
 createDataTable('freighter-table', {
     columnDefs: [
         { orderable: false, targets: 11 },

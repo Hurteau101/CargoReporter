@@ -1,0 +1,153 @@
+.scan-grid-header {
+    display: flex; align-items: center; justify-content: space-between;
+    margin-bottom: 0.8rem;
+}
+.scan-grid-title {
+    display: flex; align-items: center; gap: 0.4rem;
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 1rem; font-weight: 800;
+    letter-spacing: 0.07em; text-transform: uppercase;
+    color: var(--ice);
+}
+.scan-grid-title svg {
+    color: var(--accent);
+}
+
+.scan-entry-form {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr auto;
+    gap: 0.8rem;
+    align-items: end;
+    background: var(--navy-mid);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 1rem 1.2rem;
+    margin-bottom: 0.8rem;
+}
+
+.scan-table-wrap {
+    background: var(--navy-mid);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    overflow: hidden;
+}
+.scan-table {
+    width: 100%;
+    border-collapse:
+            collapse;
+    font-size: 0.82rem;
+}
+.scan-table thead tr {
+    background: rgba(0,0,0,0.3);
+}
+.scan-table th {
+    padding: 0.6rem 0.9rem;
+    text-align: left; font-size: 0.68rem; font-weight: 700;
+    letter-spacing: 0.1em; text-transform: uppercase;
+    color: var(--muted); border-bottom: 1px solid var(--border);
+}
+.scan-table tbody tr {
+    border-bottom: 1px solid rgba(42,74,110,0.4);
+    transition: background 0.12s;
+}
+.scan-table tbody tr:nth-child(even) {
+    background: rgba(0,0,0,0.1);
+}
+
+.scan-table tbody tr:hover {
+    background: rgba(0,194,224,0.05);
+}
+.scan-table td {
+    padding: 0.6rem 0.9rem;
+    color: var(--ice-pale);
+}
+
+.scan-count-badge {
+    display: inline-flex; align-items: center; justify-content: center;
+    min-width: 28px; height: 24px;
+    background: rgba(0,194,224,0.12);
+    border: 1px solid rgba(0,194,224,0.3);
+    border-radius: 6px;
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 0.88rem; font-weight: 800;
+    color: var(--accent);
+    padding: 0 6px;
+}
+
+.btn-scan-del {
+    background: transparent; border: none;
+    color: var(--muted); cursor: pointer;
+    padding: 0.2rem 0.4rem; border-radius: 4px;
+    transition: color 0.15s;
+}
+.btn-scan-del:hover {
+    color: #f87171;
+}
+
+.scan-empty {
+    padding: 2rem 1rem; text-align: center;
+    font-size: 0.82rem; color: var(--muted);
+}
+
+@media (max-width: 700px) {
+    .scan-entry-form { grid-template-columns: 1fr 1fr; }
+}
+
+.section-badge {
+    background: var(--accent-dim);
+    color: var(--white);
+    font-size: 0.7rem;
+    font-weight: 700;
+    padding: 0.2rem 0.55rem;
+    border-radius: 999px;
+    letter-spacing: 0.05em;
+}
+
+
+.ts-wrapper.single .ts-control {
+    background: var(--navy-dark, #0d1b2a);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    color: var(--ice-pale);
+    box-shadow: none;
+    cursor: text;
+}
+.ts-wrapper.single.input-active .ts-control {
+    background: var(--navy-dark, #0d1b2a);
+    border-color: var(--accent);
+}
+.ts-dropdown {
+    background: var(--navy-mid);
+    border: 1px solid var(--border);
+    border-radius: 0 0 8px 8px;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.4);
+    color: var(--ice-pale);
+}
+.ts-dropdown .option {
+    color: var(--ice-pale);
+    padding: 0.5rem 0.9rem;
+    font-size: 0.85rem;
+}
+.ts-dropdown .option:hover,
+.ts-dropdown .option.active {
+    background: rgba(0, 194, 224, 0.1);
+    color: var(--accent);
+}
+.ts-wrapper.single .ts-control .item {
+    color: var(--ice-pale);
+}
+.ts-dropdown .no-results {
+    background: transparent;
+    color: var(--muted);
+    font-style: italic;
+}
+.ts-wrapper.single.has-items .ts-control input {
+    width: 0 !important;
+    padding: 0 !important;
+    opacity: 0 !important;
+}
+
+.ts-control input {
+    color: var(--ice-pale) !important;
+}
+

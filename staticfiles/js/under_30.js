@@ -1,5 +1,6 @@
 import {toastNotification, updateStatValue, createDataTable} from "./helpers.js";
 
+// Create data table (for sortability)
 createDataTable('under-30-table', {
     columnDefs: [
         { orderable: false, targets: [7, 8] }
@@ -16,16 +17,22 @@ createDataTable('under-30-table', {
 
 const tbody = document.getElementById('under-30-table-body');
 
+// Handle checkbox click
 tbody.addEventListener('click', async(e) => {
     if (e.target.closest('input[type="checkbox"]')) {
         const row = e.target.closest('tr');
-        row.classList.add('row-sent');
 
         const checkboxStatus = row.querySelector('input[type="checkbox"]').checked;
 
+        // Highlight or remove highlight from row
+        checkboxStatus ? row.classList.add('row-sent') : row.classList.remove('row-sent');
+
         const awbNumber = row.dataset.rowId;
+
+        // Backend passes the list of AWBs. Find the AWB number.
         const foundAwbData = AWB_LIST.find(awb => awb.awb_number === awbNumber);
 
+        // If AWB is found, update the status.
         if (foundAwbData) {
             const response = await fetch(`/under_30/update-sent-awb/${awbNumber}`, {
                 "method": "PATCH",
@@ -43,13 +50,15 @@ tbody.addEventListener('click', async(e) => {
         }
     }
 
-
+    // Handle transfer button click
     if (e.target.closest('.btn-img')) {
         const row = e.target.closest('tr');
         const btn = e.target.closest('.btn-img');
 
         const awbNumber = row.dataset.rowId;
         const foundAwbData = AWB_LIST.find(awb => awb.awb_number === awbNumber);
+
+        // If AWB is found, transfer it.
         if (foundAwbData) {
             const response = await fetch('/under_30/transfer-awb', {
                 "method": "POST",
@@ -65,7 +74,7 @@ tbody.addEventListener('click', async(e) => {
                 return;
             }
 
-
+            // Change text to be transferred
             btn.classList.add('transferred');
             btn.textContent = 'Transferred';
             // row.remove();
