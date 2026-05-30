@@ -15,10 +15,15 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.contrib import admin
+from django.shortcuts import render
 from django.urls import path, include
 from django.conf import settings
 from under_30.views import Under30View
+from django.contrib.auth.decorators import login_not_required
 
+@login_not_required
+def access_denied(request):
+    return render(request, 'account/403.html', status=403)
 urlpatterns = [
     path('', include('homepage.urls')),
     path('under_30/', include('under_30.urls')),
@@ -28,6 +33,8 @@ urlpatterns = [
     path('sla/', include('sla.urls')),
     path('duplication/', include('duplication.urls')),
     path('accounts/', include('allauth.urls')),
+    path('access-denied/', access_denied, name='access_denied'),
+
 ]
 
 if settings.DEBUG:
