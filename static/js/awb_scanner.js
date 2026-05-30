@@ -31,7 +31,7 @@ function addRow(awb, destination, count, time) {
     cells.forEach(value => {
         const td = document.createElement('td');
         td.textContent = value;
-        tr.appendChild(td);
+        tr.prepend(td);
     });
 
     const countTd = document.createElement('td');
