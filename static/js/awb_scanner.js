@@ -2,6 +2,13 @@ import {createDataTable, toastNotification} from "./helpers.js";
 
 const storedStations = GROUPED_STATIONS
 
+const toast = sessionStorage.getItem('scanned-awb');
+if (toast) {
+    const { message, success } = JSON.parse(toast);
+    sessionStorage.removeItem('scanned-awb');
+    toastNotification(message, success);
+}
+
 new TomSelect('#scan-dest', {
     maxOptions: null,
     maxItems: 1,
@@ -18,7 +25,9 @@ new TomSelect('#scan-dest', {
 const awb = document.getElementById('scan-awb')
 const destination = document.getElementById('scan-dest')
 const saveBtn = document.getElementById('btn-scan-add')
+const deletionBtn = document.getElementById('btn-deletion-manager');
 
+updateDeletionBtn();
 
 function addRow(awb, destination, count=1, fullOrder=false) {
     const tbody = document.getElementById('scan-table-body');
@@ -129,7 +138,7 @@ destination.addEventListener('change', () => {
     tbody.replaceChildren();
 
     const currentDestination = storedStations[destination.value];
-    console.log('currentDestination', currentDestination);
+
     if (!currentDestination) {
         handleEmptyTable();
         return;
@@ -163,6 +172,7 @@ async function updateScanCount(awb, count, full_order, isCheckboxChange = false)
     toastNotification(isCheckboxChange ? `Updated Full Order AWB: ${awb}` : `Updated Count AWB: ${awb}`, true)
 }
 
+
 async function saveScanAWB(awb, destination, full_order) {
     const response = await fetch('/awb-scanner/save-awb-scanner', {
         "method": "POST",
@@ -186,6 +196,10 @@ async function saveScanAWB(awb, destination, full_order) {
 
     toastNotification(`Saved AWB: ${awb}`, true)
 
+}
+
+function updateDeletionBtn() {
+    deletionBtn.disabled = Object.keys(storedStations).length === 0;
 }
 
 saveBtn.addEventListener('click', async () => {
@@ -242,6 +256,7 @@ saveBtn.addEventListener('click', async () => {
     updateClipboardHandle();
     awb.value = '';
     awb.focus();
+    updateDeletionBtn();
 
     saveScanAWB(awbValue, destinationValue, false);
 });
@@ -262,6 +277,75 @@ destination.addEventListener('change', () => {
     }
 });
 
+
+function openModal() {
+    const list = document.getElementById('deletion-dest-list');
+    list.innerHTML = '';
+
+    Object.keys(storedStations).forEach(dest => {
+        const label = document.createElement('label');
+
+        const checkbox = document.createElement('input');
+        checkbox.type = 'checkbox';
+        checkbox.value = dest;
+
+        const name = document.createElement('span');
+        name.textContent = dest;
+
+        const count = document.createElement('span');
+        count.className = 'modal-dest-count';
+        const awbCount = storedStations[dest].length;
+        count.textContent = `${awbCount} AWB${awbCount !== 1 ? 's' : ''}`;
+
+        label.appendChild(checkbox);
+        label.appendChild(name);
+        label.appendChild(count);
+        list.appendChild(label);
+    });
+
+    document.getElementById('deletion-modal').style.display = 'flex';
+}
+
+document.getElementById('btn-confirm-delete').addEventListener('click', async() => {
+    const stations = [...document.querySelectorAll('#deletion-dest-list input[type="checkbox"]:checked')].map(cb => cb.value);
+    if (stations.length === 0) return toastNotification('No destinations selected', false);
+
+    const params = new URLSearchParams();
+    stations.forEach(dest => params.append('destinations', dest));
+
+    const response = await fetch(`/awb-scanner/mass-delete-awb-scanner?${params.toString()}`, {
+        method: 'DELETE',
+        headers: {
+            'X-CSRFToken': CSRF_TOKEN,
+        },
+    });
+
+    if (!response.ok) {
+        const responseData = await response.json();
+        sessionStorage.setItem('scanned-awb', JSON.stringify({ message: responseData.error, success: false }));
+        document.getElementById('deletion-modal').style.display = 'none';
+        window.location.reload();
+        return;
+    }
+
+    sessionStorage.setItem('scanned-awb', JSON.stringify({ message: `Mass Delete Completed for: ${stations.join(', ')}`, success: true }));
+    document.getElementById('deletion-modal').style.display = 'none';
+    window.location.reload();
+});
+
+deletionBtn.addEventListener('click', () => {
+    openModal();
+})
+
+document.getElementById('btn-close-modal').addEventListener('click', () => {
+    document.getElementById('deletion-modal').style.display = 'none';
+});
+
+document.getElementById('btn-cancel-modal').addEventListener('click', () => {
+    document.getElementById('deletion-modal').style.display = 'none';
+});
+
+
 document.getElementById('scan-table-body').addEventListener('click', async(e) => {
     const btn = e.target.closest('[data-del]');
     const awb = btn?.dataset.del;
@@ -277,6 +361,7 @@ document.getElementById('scan-table-body').addEventListener('click', async(e) =>
         delete storedStations[destination.value];
     }
 
+    updateDeletionBtn();
     handleEmptyTable();
 
     const response = await fetch(`/awb-scanner/remove-awb-scanner/${awb}`, {

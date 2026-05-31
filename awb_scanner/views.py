@@ -47,6 +47,18 @@ class UpdateCountView(View):
 
         return JsonResponse({}, status=200)
 
+
+class MassDeleteScannerView(View):
+    def delete(self, request):
+        stations = request.GET.getlist('destinations')
+
+        if not stations:
+            return JsonResponse({"error": "No stations provided"}, status=400)
+
+        AWBScanner.objects.filter(destination_iata__in=stations).delete()
+
+        return JsonResponse({}, status=204)
+
 class RemoveAWBScannerView(View):
     def delete(self, request, awb_number):
         deleted, _ = AWBScanner.objects.filter(awb_number=awb_number).delete()

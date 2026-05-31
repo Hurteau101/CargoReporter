@@ -31,6 +31,11 @@
                     Scan AWB
                 </button>
             </div>
+            <button id="btn-deletion-manager" class="deletion-manager-btn" disabled>
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" style="vertical-align:middle;margin-right:5px"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/></svg>
+                Deletion Manager
+            </button>
+
         </div>
         <div>
             <div class="scan-grid-header">
@@ -51,35 +56,33 @@
                     </tr>
                     </thead>
                     <tbody id="scan-table-body">
-{#                        {% if grouped_data %}#}
-{#                            {% for details in grouped_data.values %}#}
-{#                                <tr data-awb="{{ details.awb_number }}" data-dest="{{ details.destination_iata }}">#}
-{#                                    <td style="cursor:pointer">{{ details.awb_number  }}</td>#}
-{#                                    <td>{{ details.destination }}</td>#}
-{#                                    <td><span class="scan-count-badge">{{ details.scan_count }}</span></td>#}
-{#                                     <td>#}
-{#                                        <label for="{{ details.awb_number }}"></label>#}
-{#                                        <input type="checkbox" {% if details.full_order %} checked {% endif %} class="sent-checkbox" id="{{ details.awb_number }}">#}
-{#                                    </td>#}
-{#                                    <td>#}
-{#                                        <div style="display:flex;gap:0.4rem">#}
-{#                                            <button class="btn-icon del" data-del="{{ details.awb_number }}" title="Remove">#}
-{#                                                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/><path d="M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/></svg>#}
-{#                                            </button>#}
-{#                                        </div>#}
-{#                                    </td>#}
-{#                                </tr>#}
-{#                            {% endfor %}#}
-{#                        {% else %}#}
                         <tr>
                             <td colspan="5" class="dt-empty">Please Select Destination</td>
                         </tr>
-{#                        {% endif %}#}
                     </tbody>
                 </table>
             </div>
         </div>
     </div>
+    <div id="deletion-modal" class="modal-overlay">
+        <div class="modal-box">
+            <div class="modal-header">
+                <div class="modal-title">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/></svg>
+                    Deletion Manager
+                </div>
+                <button id="btn-close-modal" class="modal-close">✕</button>
+            </div>
+            <p class="modal-desc">Select destinations to delete all scanned AWBs for:</p>
+            <div id="deletion-dest-list" class="modal-list"></div>
+            <div class="modal-footer">
+                <button id="btn-cancel-modal" class="btn-modal-cancel">Cancel</button>
+                <button id="btn-confirm-delete" class="btn-modal-delete">Delete Selected</button>
+            </div>
+        </div>
+    </div>
+
+
 {% endblock %}
 {% block script %}
     <script>
