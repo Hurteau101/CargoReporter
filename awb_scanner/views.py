@@ -14,17 +14,17 @@ class SaveAWBScannerView(View):
 
         awb_number = data.get('awb')
         destination = data.get('destination')
-        scan_time = data.get('time')
+        full_order = data.get('full_order')
 
-        if not all([awb_number, destination, scan_time]):
+
+        if not all([awb_number, destination, full_order is not None]):
             return JsonResponse({'error': 'Could not save AWB'}, status=400)
 
         try:
             AWBScanner.objects.create(
                 destination_iata=destination,
                 awb_number=awb_number,
-                scan_time=scan_time,
-                scan_count=1
+                full_order=full_order,
             )
         except IntegrityError:
             return JsonResponse({'error': 'AWB already exists'}, status=400)
@@ -34,12 +34,16 @@ class SaveAWBScannerView(View):
 
 class UpdateCountView(View):
     def patch(self, request, awb_number):
+        body = json.loads(request.body)
+        full_order = body.get('full_order', False)
+
         found_awb = AWBScanner.objects.filter(awb_number=awb_number).first()
         if not found_awb:
             return JsonResponse({'error': 'AWB not found'}, status=404)
 
         found_awb.scan_count += 1
-        found_awb.save(update_fields=['scan_count'])
+        found_awb.full_order = full_order
+        found_awb.save(update_fields=['scan_count', 'full_order'])
 
         return JsonResponse({}, status=200)
 
@@ -54,9 +58,19 @@ class RemoveAWBScannerView(View):
 class GetAWBScannerView(View):
     def get(self, request):
 
-        already_scanned = AWBScanner.objects.all().order_by('-scan_time')
+        awbs = AWBScanner.objects.all().order_by('date_added')
+
+        grouped_destinations = {}
+
+        for awb in awbs:
+            grouped_destinations.setdefault(awb.destination_iata, []).append({
+                "awb_number": awb.awb_number,
+                "destination": awb.destination_iata,
+                "scan_count": awb.scan_count,
+                "full_order": awb.full_order,
+            })
 
         return render(request, 'scanner.html', context={
             'destinations': Destinations.choices,
-            'already_scanned': already_scanned
+            'grouped_data': json.dumps(grouped_destinations),
         })

@@ -244,6 +244,13 @@ nav {
     cursor: pointer; transition: all 0.2s; white-space: nowrap;
 }
 
+.full-order-checkbox,
+.sent-checkbox {
+    width: 20px; height: 20px;
+    cursor: pointer; accent-color: var(--success);
+    position: relative;
+}
+
 .dt-empty {
     text-align: center !important;
     color: var(--muted) !important;

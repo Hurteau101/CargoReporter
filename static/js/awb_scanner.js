@@ -1,5 +1,7 @@
 import {createDataTable, toastNotification} from "./helpers.js";
 
+const storedStations = GROUPED_STATIONS
+
 new TomSelect('#scan-dest', {
     maxOptions: null,
     maxItems: 1,
@@ -17,7 +19,8 @@ const awb = document.getElementById('scan-awb')
 const destination = document.getElementById('scan-dest')
 const saveBtn = document.getElementById('btn-scan-add')
 
-function addRow(awb, destination, count, time) {
+
+function addRow(awb, destination, count=1, fullOrder=false) {
     const tbody = document.getElementById('scan-table-body');
 
     const empty = tbody.querySelector('.dt-empty');
@@ -28,9 +31,10 @@ function addRow(awb, destination, count, time) {
     tr.dataset.dest = destination;
 
     const cells = [awb, destination];
-    cells.forEach(value => {
+    cells.forEach((value, index) => {
         const td = document.createElement('td');
         td.textContent = value;
+        if (index === 0) td.style.cursor = 'pointer';
         tr.appendChild(td);
     });
 
@@ -41,10 +45,14 @@ function addRow(awb, destination, count, time) {
     countTd.appendChild(badge);
     tr.appendChild(countTd);
 
-    const timeTd = document.createElement('td');
-    timeTd.textContent = time;
-    tr.appendChild(timeTd);
-
+    const fullOrderCheckbox = document.createElement('td');
+    const checkbox = document.createElement('input');
+    checkbox.type = 'checkbox';
+    checkbox.checked = fullOrder;
+    checkbox.dataset.awb = awb;
+    checkbox.classList.add('full-order-checkbox');
+    fullOrderCheckbox.appendChild(checkbox);
+    tr.appendChild(fullOrderCheckbox);
 
     const actionTd = document.createElement('td');
     const btn = document.createElement('button');
@@ -59,12 +67,15 @@ function addRow(awb, destination, count, time) {
 }
 
 // Clipboard copy AWB number
-document.querySelectorAll('tr td:first-child').forEach(cell => {
-    cell.addEventListener('click', () => {
-        navigator.clipboard.writeText(cell.textContent.trim().slice(4))
-            .then(() => {});
+function updateClipboardHandle () {
+    document.querySelectorAll('tr td:first-child').forEach(cell => {
+        cell.addEventListener('click', () => {
+            navigator.clipboard.writeText(cell.textContent.trim().slice(4))
+                .then(() => {});
+        })
     })
-})
+}
+
 
 function getValidationError(awb, destination) {
     if (!destination) return 'Please select a destination';
@@ -73,7 +84,63 @@ function getValidationError(awb, destination) {
     return null;
 }
 
-async function updateScanCount(awb, count) {
+function handleEmptyTable() {
+    const tbody = document.getElementById('scan-table-body');
+    if (tbody.querySelectorAll('tr').length === 0) {
+        const tr = document.createElement('tr');
+        const td = document.createElement('td');
+        td.colSpan = 5;
+        td.className = 'dt-empty';
+        td.textContent = 'No scanned AWBs found';
+        tr.appendChild(td);
+        tbody.appendChild(tr);
+    }
+}
+
+function findAWb(awbValue, destinationValue) {
+    const currentDestination = storedStations[destinationValue];
+    return currentDestination.find(station => station.awb_number === awbValue);
+}
+
+function findAWBInOtherDest(awbValue, destinationValue) {
+    return Object.entries(storedStations).find(([dest]) =>
+        dest !== destinationValue && storedStations[dest].some(s => s.awb_number === awbValue)
+    );
+}
+
+
+document.getElementById('scan-table-body').addEventListener('change', async (e) => {
+    if (!e.target.classList.contains('full-order-checkbox')) return;
+    const row = e.target.closest('tr');
+    const awb = row.dataset.awb;
+    const fullOrder = e.target.checked;
+    const scanCount = row.querySelector('.scan-count-badge').textContent;
+
+    const foundObj = findAWb(awb, destination.value);
+    foundObj.full_order = fullOrder;
+
+    updateScanCount(awb, scanCount, fullOrder, true);
+
+});
+
+
+destination.addEventListener('change', () => {
+    const tbody = document.getElementById("scan-table-body");
+    tbody.replaceChildren();
+
+    const currentDestination = storedStations[destination.value];
+    console.log('currentDestination', currentDestination);
+    if (!currentDestination) {
+        handleEmptyTable();
+        return;
+    }
+
+    currentDestination.forEach(destination => {
+        addRow(destination.awb_number, destination.destination, destination.scan_count, destination.full_order);
+    })
+})
+
+async function updateScanCount(awb, count, full_order, isCheckboxChange = false) {
     const response = await fetch(`/awb-scanner/update-count/${awb}`, {
         "method": "PATCH",
         "headers": {
@@ -82,7 +149,8 @@ async function updateScanCount(awb, count) {
             'Accept': 'application/json',
         },
         "body": JSON.stringify({
-            "count": count
+            "count": count,
+            "full_order": full_order,
         })
     })
 
@@ -92,10 +160,10 @@ async function updateScanCount(awb, count) {
         return;
     }
 
-    toastNotification(`Updated Count AWB: ${awb}`, true)
+    toastNotification(isCheckboxChange ? `Updated Full Order AWB: ${awb}` : `Updated Count AWB: ${awb}`, true)
 }
 
-async function saveScanAWB(awb, destination, count) {
+async function saveScanAWB(awb, destination, full_order) {
     const response = await fetch('/awb-scanner/save-awb-scanner', {
         "method": "POST",
         "headers": {
@@ -106,7 +174,7 @@ async function saveScanAWB(awb, destination, count) {
         "body": JSON.stringify({
             "awb": awb,
             "destination": destination,
-            "time": new Date().toISOString()
+            "full_order": full_order,
         })
     })
 
@@ -124,44 +192,58 @@ saveBtn.addEventListener('click', async () => {
     const awbValue = awb.value;
     const destinationValue = destination.value;
 
+    const currentDestination = storedStations[destinationValue];
+
+    const stationObj = {
+        awb_number: awbValue,
+        destination: destinationValue,
+        scan_count: 1,
+        full_order: false,
+    }
+
+
     const error = getValidationError(awbValue, destinationValue);
     if (error) return toastNotification(error, false);
 
-    const now = new Date().toLocaleString('en-US', {
-        month: 'short', day: '2-digit', year: '2-digit',
-        hour: '2-digit', minute: '2-digit', hour12: true
-    });
+    const existingInOtherDest = findAWBInOtherDest(awbValue, destinationValue);
+
+    if (existingInOtherDest) {
+        const [dest] = existingInOtherDest;
+        return toastNotification(`AWB already scanned under ${dest}`, false);
+    }
 
     const existingRow = document.querySelector(`tr[data-awb="${awbValue}"]`);
 
-    console.log('existingRow', existingRow);
-    console.log('rowDest', existingRow?.dataset.dest);
-    console.log('destinationValue', destinationValue);
-
     if (existingRow) {
-        console.log('existingRow', existingRow);
-        console.log('rowDest', existingRow?.dataset.dest);
-        console.log('destinationValue', destinationValue);
+        const foundObj = findAWb(awbValue, destinationValue);
+        foundObj.scan_count += 1;
 
-        const rowDest = existingRow.dataset.dest;
-        if (rowDest.trim() !== destinationValue.trim()) {
-            return toastNotification('Wrong destination for this AWB', false);
-        }
+        const fullOrderCheckbox = existingRow.querySelector('.full-order-checkbox');
+        const fullOrder = fullOrderCheckbox.checked;
 
         const badge = existingRow.querySelector('.scan-count-badge');
         const newCount = parseInt(badge.textContent) + 1;
         badge.textContent = String(newCount);
         awb.value = '';
         awb.focus();
-        updateScanCount(awbValue, newCount);
+        updateClipboardHandle();
+        updateScanCount(awbValue, newCount, fullOrder);
         return;
     }
 
-    addRow(awbValue, destinationValue, 1, now);
+    if (!currentDestination) {
+        storedStations[destinationValue] = [stationObj]
+    } else {
+        storedStations[destinationValue].push(stationObj);
+    }
+
+
+    addRow(awbValue, destinationValue, 1);
+    updateClipboardHandle();
     awb.value = '';
     awb.focus();
 
-    saveScanAWB(awbValue, destinationValue, 1);
+    saveScanAWB(awbValue, destinationValue, false);
 });
 
 awb.addEventListener('input', () => {
@@ -187,16 +269,15 @@ document.getElementById('scan-table-body').addEventListener('click', async(e) =>
     const row = document.querySelector(`tr[data-awb="${btn.dataset.del}"]`);
     row?.remove();
 
-    const tbody = document.getElementById('scan-table-body');
-    if (tbody.querySelectorAll('tr').length === 0) {
-        const tr = document.createElement('tr');
-        const td = document.createElement('td');
-        td.colSpan = 5;
-        td.className = 'dt-empty';
-        td.textContent = 'No scanned AWBs found';
-        tr.appendChild(td);
-        tbody.appendChild(tr);
+    const currentDestination = storedStations[destination.value];
+    if (!currentDestination) return;
+
+    storedStations[destination.value] = storedStations[destination.value].filter(s => s.awb_number !== awb);
+    if (storedStations[destination.value].length === 0) {
+        delete storedStations[destination.value];
     }
+
+    handleEmptyTable();
 
     const response = await fetch(`/awb-scanner/remove-awb-scanner/${awb}`, {
         "method": "DELETE",

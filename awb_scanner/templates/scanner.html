@@ -46,32 +46,35 @@
                         <th style="mou">AWB #</th>
                         <th>Destination</th>
                         <th >Scan Count</th>
-                        <th>Scan Time</th>
+                        <th>Full Order</th>
                         <th>Action</th>
                     </tr>
                     </thead>
                     <tbody id="scan-table-body">
-                        {% if already_scanned %}
-                            {% for scan in already_scanned %}
-                                <tr data-awb="{{ scan.awb_number }}" data-dest="{{ scan.destination_iata }}">
-                                    <td style="cursor:pointer">{{ scan.awb_number  }}</td>
-                                    <td>{{ scan.destination_iata }}</td>
-                                    <td><span class="scan-count-badge">{{ scan.scan_count }}</span></td>
-                                    <td>{{ scan.scan_time|date:"M d, y" }} , {{ scan.scan_time|time:"h:i A" }}</td>
-                                    <td>
-                                        <div style="display:flex;gap:0.4rem">
-                                            <button class="btn-icon del" data-del="{{ scan.awb_number }}" title="Remove">
-                                                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/><path d="M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/></svg>
-                                            </button>
-                                        </div>
-                                    </td>
-                                </tr>
-                            {% endfor %}
-                        {% else %}
+{#                        {% if grouped_data %}#}
+{#                            {% for details in grouped_data.values %}#}
+{#                                <tr data-awb="{{ details.awb_number }}" data-dest="{{ details.destination_iata }}">#}
+{#                                    <td style="cursor:pointer">{{ details.awb_number  }}</td>#}
+{#                                    <td>{{ details.destination }}</td>#}
+{#                                    <td><span class="scan-count-badge">{{ details.scan_count }}</span></td>#}
+{#                                     <td>#}
+{#                                        <label for="{{ details.awb_number }}"></label>#}
+{#                                        <input type="checkbox" {% if details.full_order %} checked {% endif %} class="sent-checkbox" id="{{ details.awb_number }}">#}
+{#                                    </td>#}
+{#                                    <td>#}
+{#                                        <div style="display:flex;gap:0.4rem">#}
+{#                                            <button class="btn-icon del" data-del="{{ details.awb_number }}" title="Remove">#}
+{#                                                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/><path d="M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/></svg>#}
+{#                                            </button>#}
+{#                                        </div>#}
+{#                                    </td>#}
+{#                                </tr>#}
+{#                            {% endfor %}#}
+{#                        {% else %}#}
                         <tr>
-                            <td colspan="5" class="dt-empty">No scanned AWBs found</td>
+                            <td colspan="5" class="dt-empty">Please Select Destination</td>
                         </tr>
-                        {% endif %}
+{#                        {% endif %}#}
                     </tbody>
                 </table>
             </div>
@@ -81,6 +84,7 @@
 {% block script %}
     <script>
         const CSRF_TOKEN = '{{ csrf_token }}'
+        const GROUPED_STATIONS = {{ grouped_data|safe }};
     </script>
     <script src="https://cdn.jsdelivr.net/npm/tom-select@2.3.1/dist/js/tom-select.complete.min.js"></script>
     <script type="module" src="{% static 'js/awb_scanner.js' %}"></script>
